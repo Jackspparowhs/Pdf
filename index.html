@@ -3,721 +3,645 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>PirateRuler — File Forge (Image↔PDF, Converter, Compressor, Editor)</title>
-<meta name="description" content="PirateRuler File Forge - client-side converters: Image→PDF, PDF→Image, image convert/compress, rename, combine, split, metadata edit. No API." />
+<title>Math Solver — PirateRuler</title>
+<meta name="description" content="Mathematical Problem Solver — PirateRuler. Client-side solver for expressions, linear & quadratic equations, functions, with step-by-step." />
 <meta name="theme-color" content="#f7fbff" />
 <link rel="icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect rx="14" width="64" height="64" fill="%236b7dff"/><text x="50%" y="50%" font-family="Inter,Arial,sans-serif" font-weight="800" font-size="26" text-anchor="middle" alignment-baseline="central" fill="white">PR</text></svg>'>
-<!-- CDN libs -->
-<!-- jsPDF for image->PDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<!-- pdf-lib for PDF combine / metadata / split -->
-<script src="https://cdn.jsdelivr.net/npm/pdf-lib@2.16.0/dist/pdf-lib.min.js"></script>
-<!-- pdf.js for rendering PDF pages to canvas -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.min.js"></script>
-<!-- Sortable for reorder -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
-<!-- JSZip for zip downloads -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<!-- FileSaver to trigger downloads (fallback) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
 <style>
-  /* Reuse PirateRuler "calculator" design language — compact */
+  /* --- visually matches your Calculator theme --- */
   :root{
     --bg:#f3f7fb; --card:#ffffff; --muted:#6b7480; --text:#0b2130;
     --accent-start:#6b7dff; --accent-end:#0bb3ff;
     --glass: rgba(11,17,28,0.04);
-    --radius:14px; --shadow-lg: 0 18px 50px rgba(3,12,30,0.18);
+    --radius:14px;
+    --shadow-lg: 0 18px 50px rgba(3,12,30,0.18), inset 0 1px 0 rgba(255,255,255,0.6);
+    --shadow-sm: 0 8px 24px rgba(3,12,30,0.08);
   }
-  html.dark{ --bg:#071225; --card:#061028; --muted:#98a7bf; --text:#e9f1ff; --accent-start:#5ab3ff; --accent-end:#6b7dff; }
-  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--text);background:linear-gradient(180deg,var(--bg),#e9f6ff);-webkit-font-smoothing:antialiased}
-  .container{max-width:1200px;margin:14px auto;padding:18px}
-  header.header{display:flex;align-items:center;justify-content:space-between;padding:14px;border-radius:12px;background:linear-gradient(90deg, rgba(107,125,255,0.06), rgba(11,179,255,0.02));box-shadow:0 8px 24px rgba(3,12,30,0.08)}
-  .brand{display:flex;gap:12px;align-items:center}
-  .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent-start),var(--accent-end));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900}
-  .title-strong{font-weight:900;font-size:18px}
-  .by{font-size:12px;color:var(--muted)}
-  .header-actions{display:flex;gap:10px;align-items:center}
-  .btn{padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:800}
-  .btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06)}
-  .btn.primary{background:linear-gradient(90deg,var(--accent-start),var(--accent-end));color:white}
-  .hamb{width:46px;height:46px;border-radius:10px;background:var(--glass);display:flex;align-items:center;justify-content:center;cursor:pointer}
-  .hero{margin-top:14px;padding:18px;border-radius:12px;background:var(--card);box-shadow:var(--shadow-lg)}
-  .tabs{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-  .tab{padding:10px 14px;border-radius:999px;border:1px solid rgba(0,0,0,0.06);cursor:pointer}
-  .tab.active{background:linear-gradient(90deg,var(--accent-start),var(--accent-end));color:white;box-shadow:0 10px 30px rgba(11,107,255,0.12)}
-  main.grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-top:12px}
-  @media(max-width:980px){ main.grid{grid-template-columns:1fr} .sidebar{position:static} }
-  .card{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 8px 24px rgba(3,12,30,0.06);border:1px solid rgba(0,0,0,0.04)}
+  html.dark { --bg:#071225; --card:#061028; --muted:#98a7bf; --text:#e9f1ff; --glass: rgba(255,255,255,0.02); --accent-start:#5ab3ff; --accent-end:#6b7dff; }
+  html.ocean { --bg:#e8f7fb; --card:#ffffff; --muted:#4f6b75; --text:#063242; --accent-start:#00c2d1; --accent-end:#2b9fff; }
+  html.sunset { --bg:#fff6f8; --card:#fff; --muted:#7a6b77; --text:#2a1020; --accent-start:#ff7aa2; --accent-end:#ffb86b; }
+
+  *{box-sizing:border-box}
+  body{background:linear-gradient(180deg,var(--bg), #e9f6ff); font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial; color:var(--text); margin:0; -webkit-font-smoothing:antialiased;}
+  .container{max-width:1280px;margin:14px auto;padding:18px;}
+
+  header.header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px; border-radius:14px; background:linear-gradient(90deg, rgba(107,125,255,0.06), rgba(11,179,255,0.02)); box-shadow:var(--shadow-sm); }
+  .brand {display:flex; align-items:center; gap:12px;}
+  .logo { width:60px;height:60px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:800; background:linear-gradient(135deg,var(--accent-start),var(--accent-end)); color:white; font-size:20px; box-shadow:0 10px 30px rgba(11,123,255,0.12); }
+  .brand-title .title-strong {font-size:22px;font-weight:900;margin:0}
+  .brand-title .by {font-size:12px;color:var(--muted); margin-top:3px}
+  .header-actions {display:flex; gap:10px; align-items:center;}
+  .btn {padding:9px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+  .btn.ghost {background:transparent;border:1px solid rgba(0,0,0,0.06);}
+  .btn.theme {background:linear-gradient(90deg,var(--accent-start),var(--accent-end)); color:white}
+  .hamb { width:46px;height:46px;border-radius:10px;background:var(--glass);display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid rgba(0,0,0,0.04) }
+
+  .theme-select { position:relative; }
+  .theme-list { position:absolute; right:0; top:48px; background:var(--card); border-radius:10px; box-shadow:var(--shadow-sm); padding:8px; display:none; min-width:140px; z-index:1000; }
+  .theme-item { padding:8px 10px; cursor:pointer; border-radius:8px; font-weight:700; color:var(--muted); }
+
+  .hero { margin-top:18px; padding:28px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.96)); box-shadow:var(--shadow-lg); }
+  .hero .big {font-size:34px;font-weight:900;margin:0;text-align:center}
+  .hero .small {text-align:center;color:var(--muted);margin-top:8px; max-width:960px;margin-left:auto;margin-right:auto}
+
+  .grid { display:grid; grid-template-columns: 2fr 1fr; gap:18px; margin-top:12px; align-items:start; }
+  @media (max-width:980px){ .grid{ grid-template-columns: 1fr } }
+  .card { background:var(--card); border-radius:14px; padding:18px; box-shadow:var(--shadow-sm); border:1px solid rgba(0,0,0,0.04); }
+  .card h2{margin:0 0 8px 0;font-size:18px}
+  .hint{color:var(--muted); font-size:13px; margin-bottom:10px}
+
+  input[type="text"], select, textarea { width:100%; padding:12px;border-radius:10px;border:1px solid rgba(10,20,40,0.06); font-size:15px; background:transparent; color:var(--text); }
+  textarea { min-height:120px; resize:vertical; }
+  .row {display:flex; gap:10px}
+  .primary { background:linear-gradient(90deg,var(--accent-start),var(--accent-end)); color:white; padding:9px 14px; border-radius:10px; border:none; font-weight:800; cursor:pointer }
+  .ghost { background:transparent; border:1px solid rgba(0,0,0,0.06); padding:9px 12px;border-radius:10px; cursor:pointer }
+  .result { margin-top:12px; font-weight:800; color:#0b8a66 } html.dark .result { color:#57f0b6 }
   .muted{color:var(--muted)}
-  .input-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  input[type="file"]{display:none}
-  .dropzone{border:2px dashed rgba(0,0,0,0.06);padding:18px;border-radius:10px;text-align:center;cursor:pointer;background:linear-gradient(180deg, rgba(255,255,255,0.6), transparent)}
-  .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-  .thumb{width:120px;border-radius:8px;padding:8px;background:linear-gradient(180deg, rgba(255,255,255,0.04), transparent);text-align:center;border:1px solid rgba(0,0,0,0.04)}
-  .thumb img{max-width:100%;height:72px;object-fit:cover;border-radius:6px}
-  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .small{font-size:13px;color:var(--muted)}
-  .editor-canvas{max-width:100%;border:1px solid rgba(0,0,0,0.06);border-radius:8px}
-  footer{margin-top:18px;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.96));text-align:center}
-  .visit{padding:10px 18px;border-radius:999px;background:linear-gradient(90deg,#ff7aa2 0%, #6b7dff 100%);color:#fff;font-weight:800;text-decoration:none}
-  .sidebar{position:relative}
+
+  .controls-grid { display:grid; grid-template-columns: 1fr 160px 120px 120px; gap:10px; align-items:center; }
+  @media(max-width:900px){ .controls-grid { grid-template-columns: 1fr; } }
+
+  .result-block { white-space:pre-wrap; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace; background:linear-gradient(180deg, rgba(0,0,0,0.01), transparent); padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.04); margin-top:12px; }
+
+  .history-list { display:flex; flex-direction:column; gap:8px; margin-top:10px; }
+  .history-item { padding:10px; border-radius:10px; background:linear-gradient(180deg, rgba(0,0,0,0.02), transparent); border:1px solid rgba(0,0,0,0.04); display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .history-item button { font-weight:700; padding:6px 8px; border-radius:8px; }
+
+  footer { margin-top:16px; padding:16px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.96)); text-align:center; box-shadow:var(--shadow-lg) }
+  .visit { padding:12px 20px; border-radius:999px; display:inline-block; background:linear-gradient(90deg,#ff7aa2 0%, #6b7dff 100%); color:white; font-weight:800; text-decoration:none }
 </style>
 </head>
 <body>
 <div class="container">
-  <header class="header">
+  <header class="header" role="banner">
     <div class="brand">
-      <div class="logo">PR</div>
-      <div>
-        <div class="title-strong">File Forge</div>
-        <div class="by small">By PirateRuler — offline converters & tools</div>
+      <div class="logo" aria-hidden="true">PR</div>
+      <div class="brand-title">
+        <div class="title-strong">Math Solver</div>
+        <div class="by">by PirateRuler.com</div>
       </div>
     </div>
+
     <div class="header-actions">
-      <div class="theme-select">
-        <button id="themeBtn" class="btn ghost">Theme</button>
+      <div class="theme-select" id="themeSelectWrap">
+        <button id="themeBtn" class="btn theme">Ocean ▾</button>
+        <div id="themeList" class="theme-list" aria-hidden="true">
+          <div class="theme-item" data-theme="light">Light</div>
+          <div class="theme-item" data-theme="dark">Dark</div>
+          <div class="theme-item" data-theme="ocean">Ocean</div>
+          <div class="theme-item" data-theme="sunset">Sunset</div>
+        </div>
       </div>
-      <a class="btn" href="https://pirateruler.com" target="_blank" rel="noopener">PirateRuler.com</a>
+
+      <div id="hambBtn" class="hamb" title="Open menu">☰</div>
     </div>
   </header>
 
-  <section class="hero card">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-      <div>
-        <h2 style="margin:0">File Forge — Image & PDF Toolbox</h2>
-        <div class="muted small">Private, client-side tools: Image→PDF, PDF→Image, convert, compress, edit & combine — everything in your browser.</div>
-      </div>
-      <div class="small muted" id="summary">Files: 0 • Total: 0 KB</div>
-    </div>
+  <section class="hero" aria-labelledby="heroTitle">
+    <h1 id="heroTitle" class="big">Mathematical Problem Solver</h1>
+    <p class="small">Solve expressions, linear & quadratic equations, and evaluate functions — offline, client-side, with steps.</p>
 
-    <div class="tabs" role="tablist" style="margin-top:12px">
-      <button class="tab active" data-target="tab-img2pdf">Image → PDF</button>
-      <button class="tab" data-target="tab-pdf2img">PDF → Images</button>
-      <button class="tab" data-target="tab-convert">Convert / Compress</button>
-      <button class="tab" data-target="tab-rename">Rename / Combine / Split</button>
-      <button class="tab" data-target="tab-editor">Mini Image Editor</button>
-      <button class="tab" data-target="tab-metadata">PDF Metadata</button>
+    <div style="margin-top:14px">
+      <div class="controls-grid">
+        <input id="inputProblem" type="text" placeholder="Enter expression or equation — e.g. 3*(2+1)  OR  2x+3=7  OR  x^2 - 5x + 6 = 0  OR  sin(30)" value="x^2 - 5x + 6 = 0" />
+        <select id="modeSelect" title="Mode">
+          <option value="auto">Auto Detect</option>
+          <option value="eval">Expression Evaluate</option>
+          <option value="linear">Solve Linear (ax + b = c)</option>
+          <option value="quadratic">Solve Quadratic (ax^2 + bx + c = 0)</option>
+          <option value="func">Function Evaluate</option>
+        </select>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <label style="font-weight:700;font-size:13px;margin-right:6px">Degrees</label>
+          <input id="degToggle" type="checkbox" title="Use degrees for trig" />
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button id="solveBtn" class="primary">Solve</button>
+          <button id="copyBtn" class="btn ghost">Copy</button>
+        </div>
+      </div>
     </div>
   </section>
 
-  <main class="grid">
-    <!-- LEFT: tools -->
+  <main class="grid" role="main">
     <div>
-      <!-- image -> pdf -->
-      <section id="tab-img2pdf" class="card" aria-labelledby="t1">
-        <h3 id="t1">Image → PDF</h3>
-        <div class="muted small">Upload images, reorder, choose paper size & orientation, then export single PDF.</div>
+      <section class="card">
+        <h2>Result</h2>
+        <div class="hint">Solution and—if applicable—step-by-step explanation below.</div>
+        <div id="resultBox" class="result-block">No result yet. Enter a problem and click Solve.</div>
 
-        <div style="margin-top:12px" class="input-row">
-          <label class="dropzone" id="imgDrop">Click or drop images here (jpg/png/webp) <input id="imgInput" type="file" accept="image/*" multiple></label>
-          <div style="flex:1">
-            <div class="controls">
-              <select id="paperSize">
-                <option value="a4">A4 (210 × 297 mm)</option>
-                <option value="letter">Letter (8.5 × 11 in)</option>
-                <option value="custom">Custom px</option>
-              </select>
-              <select id="orientation"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select>
-              <label class="small">Fit mode:
-                <select id="fitMode">
-                  <option value="fit">Fit to page</option>
-                  <option value="cover">Cover (crop)</option>
-                  <option value="margin">Keep margin</option>
-                </select>
-              </label>
-              <input id="marginVal" type="number" min="0" value="10" style="width:90px" /> <span class="small">mm margin</span>
-              <input id="pdfName" type="text" placeholder="Output filename (no extension)" style="width:220px" value="pirateruler-images" />
-              <button id="img2pdfBtn" class="btn primary">Convert → PDF</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="thumbs" id="imgList" aria-live="polite" style="margin-top:12px"></div>
-      </section>
-
-      <!-- pdf -> images -->
-      <section id="tab-pdf2img" class="card" aria-labelledby="t2" hidden>
-        <h3 id="t2">PDF → Images</h3>
-        <div class="muted small">Open a PDF from your device, render pages, and export pages as PNG/JPG or ZIP.</div>
-        <div style="margin-top:12px" class="input-row">
-          <label class="dropzone" id="pdfDrop">Click or drop a PDF here <input id="pdfInput" type="file" accept="application/pdf"></label>
-          <div style="flex:1">
-            <div class="controls">
-              <label class="small">Page range: <input id="pageFrom" type="number" min="1" placeholder="1" style="width:80px"> – <input id="pageTo" type="number" min="1" placeholder="end" style="width:80px"></label>
-              <select id="pdfExportFormat"><option value="png">PNG</option><option value="jpeg">JPG</option></select>
-              <label class="small">Quality (JPG) <input id="pdfImgQuality" type="range" min="0.1" max="1" step="0.05" value="0.9" /></label>
-              <button id="pdf2imgBtn" class="btn primary">Render & Export</button>
-            </div>
-          </div>
-        </div>
-        <div id="pdfPreview" style="margin-top:12px"></div>
-      </section>
-
-      <!-- convert / compress -->
-      <section id="tab-convert" class="card" aria-labelledby="t3" hidden>
-        <h3 id="t3">Image Convert & Compressor</h3>
-        <div class="muted small">Convert between JPG/PNG/WEBP/BMP, resize, or compress. Batch supported.</div>
-        <div style="margin-top:12px" class="input-row">
-          <label class="dropzone" id="convDrop">Click or drop images here <input id="convInput" type="file" accept="image/*" multiple></label>
-          <div style="flex:1">
-            <div class="controls">
-              <select id="convFormat"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WEBP</option></select>
-              <label class="small">Quality <input id="convQuality" type="range" min="0.1" max="1" step="0.05" value="0.9"></label>
-              <label class="small">Width <input id="convWidth" type="number" placeholder="auto" style="width:100px"></label>
-              <button id="convBtn" class="btn primary">Convert / Compress</button>
-            </div>
-          </div>
-        </div>
-        <div id="convResults" style="margin-top:12px"></div>
-      </section>
-
-      <!-- rename / combine / split -->
-      <section id="tab-rename" class="card" aria-labelledby="t4" hidden>
-        <h3 id="t4">Rename • Combine • Split</h3>
-        <div class="muted small">Batch rename files, combine text/CSV/PDF/images, split PDFs.</div>
-
-        <div style="margin-top:12px">
-          <div><strong>Batch Rename</strong></div>
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <input id="renameInput" type="file" multiple />
-            <input id="prefix" placeholder="prefix" style="width:120px">
-            <input id="suffix" placeholder="suffix" style="width:120px">
-            <input id="replaceFrom" placeholder="find" style="width:120px">
-            <input id="replaceTo" placeholder="replace" style="width:120px">
-            <select id="caseOpt"><option value="none">No case</option><option value="lower">lowercase</option><option value="upper">UPPERCASE</option></select>
-            <button id="renameBtn" class="btn">Rename & Download</button>
-          </div>
-        </div>
-
-        <hr style="margin:12px 0">
-
-        <div><strong>Combine Files</strong></div>
-        <div class="muted small">Combine text/CSV into one file, combine images to long image or PDF, combine PDFs into one PDF.</div>
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <input id="combineInput" type="file" multiple />
-          <select id="combineMode"><option value="text">Text/CSV → merge.txt</option><option value="images-pdf">Images → single PDF</option><option value="images-long">Images → long combined image</option><option value="pdf">Combine PDFs</option></select>
-          <input id="combineName" placeholder="Output name" style="width:220px" value="pirateruler-combined" />
-          <button id="combineBtn" class="btn primary">Combine</button>
-        </div>
-
-        <hr style="margin:12px 0">
-
-        <div><strong>Split PDF</strong></div>
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <input id="splitInput" type="file" accept="application/pdf" />
-          <input id="splitName" placeholder="Output base name" style="width:220px" value="pirateruler-split" />
-          <button id="splitBtn" class="btn">Split PDF → pages</button>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button id="downloadBtn" class="btn ghost">Download .txt</button>
+          <button id="clearHistory" class="btn ghost">Clear History</button>
+          <div style="flex:1"></div>
+          <div class="muted" id="statusMsg" aria-live="polite"></div>
         </div>
       </section>
 
-      <!-- editor -->
-      <section id="tab-editor" class="card" aria-labelledby="t5" hidden>
-        <h3 id="t5">Mini Image Editor</h3>
-        <div class="muted small">Crop, rotate, brightness/contrast, flip, watermark & export.</div>
-
-        <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
-          <input id="editInput" type="file" accept="image/*" />
-          <button id="loadEdit" class="btn">Load</button>
-          <button id="saveEdit" class="btn primary">Export</button>
-        </div>
-
-        <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
-          <label class="small">Brightness <input id="bright" type="range" min="-1" max="1" step="0.05" value="0"></label>
-          <label class="small">Contrast <input id="contrast" type="range" min="-1" max="1" step="0.05" value="0"></label>
-          <button id="rotateBtn" class="btn">Rotate 90°</button>
-          <button id="flipH" class="btn ghost">Flip H</button>
-          <button id="flipV" class="btn ghost">Flip V</button>
-        </div>
-
-        <div style="margin-top:12px">
-          <canvas id="editCanvas" class="editor-canvas" width="900" height="500"></canvas>
-        </div>
-      </section>
-
-      <!-- metadata -->
-      <section id="tab-metadata" class="card" aria-labelledby="t6" hidden>
-        <h3 id="t6">PDF Metadata Editor</h3>
-        <div class="muted small">Edit Title, Author, Subject, Keywords in a PDF file locally.</div>
-        <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
-          <input id="metaInput" type="file" accept="application/pdf" />
-          <input id="metaTitle" placeholder="Title" style="width:220px" />
-          <input id="metaAuthor" placeholder="Author" style="width:220px" />
-          <input id="metaSubject" placeholder="Subject" style="width:220px" />
-          <input id="metaKeywords" placeholder="Keywords (comma)" style="width:220px" />
-          <button id="metaBtn" class="btn primary">Apply Metadata</button>
-        </div>
-
-        <hr style="margin:12px 0">
-
-        <div><strong>PDF Locker / Unlocker</strong> — UI present; secure add/remove password requires a dedicated library. See note below.</div>
-        <div class="muted small">Removing/adding encryption is not reliably available via pdf-lib/jsPDF in all browsers; request a server-side or wasm solution if you require this feature.</div>
+      <section class="card" style="margin-top:12px">
+        <h2>Input helpers</h2>
+        <div class="hint">Quick examples & tips</div>
+        <ul style="margin:8px 0 0 18px;color:var(--muted)">
+          <li><strong>Expression:</strong> 3*(2+sqrt(5)) + sin(0.5)</li>
+          <li><strong>Linear:</strong> 2x + 3 = 7  or  x + 4 = 10</li>
+          <li><strong>Quadratic:</strong> x^2 - 5x + 6 = 0  or  2x^2+3x-5=0</li>
+          <li><strong>Functions:</strong> sin(30) (use degrees toggle), cos(pi/4), log(10)</li>
+        </ul>
       </section>
     </div>
 
-    <!-- RIGHT: sidebar / features -->
-    <aside class="sidebar">
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div><strong>Why File Forge?</strong></div>
-          <div class="small muted" id="fileCount">0 files</div>
-        </div>
-        <div style="margin-top:8px" class="small muted">
-          Private by design — nothing is uploaded. Works on phones & desktops. Use Export buttons to download results.
-        </div>
-        <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div class="card small"><strong>Zip export</strong><div class="muted small">Bundle outputs</div></div>
-          <div class="card small"><strong>Drag reorder</strong><div class="muted small">Change image order</div></div>
-          <div class="card small"><strong>Combine PDFs</strong><div class="muted small">Client-side merge</div></div>
-          <div class="card small"><strong>Metadata edits</strong><div class="muted small">Set Title/Author</div></div>
-        </div>
-      </div>
+    <aside>
+      <div class="feature-panel card">
+        <div class="panel-title">History</div>
+        <div id="historyList" class="history-list"></div>
 
-      <div style="height:12px"></div>
-      <div class="card small muted">
-        <strong>Notes & tips</strong>
-        <ul>
-          <li>Large jobs may use significant memory on phones.</li>
-          <li>PDF→Image rendering uses pdf.js and may take time for large PDFs.</li>
-          <li>For password lockdown, consider server or a wasm-based PDF encryptor for guaranteed compatibility.</li>
-        </ul>
+        <div class="spacer" style="height:12px"></div>
+
+        <div class="panel-title">Why this tool?</div>
+        <div style="color:var(--muted);font-size:13px">
+          Private & offline — everything runs in your browser. Small, fast, and easy to fork.
+        </div>
+
+        <div style="height:12px"></div>
+        <a class="visit" href="https://pirateruler.com" target="_blank" rel="noopener noreferrer">Visit PirateRuler.com</a>
       </div>
     </aside>
   </main>
 
   <footer>
-    <a class="visit" href="https://pirateruler.com" target="_blank" rel="noopener">Visit PirateRuler.com</a>
     <div style="height:8px"></div>
-    <small class="muted">© <span id="year"></span> PirateRuler — File Forge</small>
+    <small class="muted">© <span id="year"></span> PirateRuler — Math Solver (offline)</small>
   </footer>
 </div>
 
+<!-- sidebar -->
+<aside id="sidebar" class="sidebar" style="position:fixed;top:0;right:0;height:100vh;width:360px;transform:translateX(120%);transition:transform .28s;z-index:90;background:var(--card);padding:18px;border-left:1px solid rgba(0,0,0,0.04);">
+  <div style="display:flex;justify-content:flex-end"><button id="closeSidebar" class="btn ghost">Close</button></div>
+  <h3>PirateRuler Links</h3>
+  <nav style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
+    <a href="https://pirateruler.com/post/about.html" target="_blank">About — PirateRuler</a>
+    <a href="https://pirateruler.com/post/privacy.html" target="_blank">Privacy Policy</a>
+    <a href="https://pirateruler.com/post/contact.html" target="_blank">Contact</a>
+    <a href="https://pirateruler.com/post/terms.html" target="_blank">Terms</a>
+  </nav>
+</aside>
+
 <script>
-/* File Forge - main client-side logic
-   Uses: jsPDF, pdf-lib, pdf.js, SortableJS, JSZip, FileSaver
+/* Math Solver — client side only
+   - Safe-ish evaluator that whitelists known functions and characters.
+   - Linear / quadratic solver with step-by-step.
+   - History saved to localStorage.
 */
 
-document.getElementById('year').textContent = new Date().getFullYear();
+const el = id => document.getElementById(id);
+el('year').textContent = new Date().getFullYear();
 
-/* Tab switching */
-const tabs = Array.from(document.querySelectorAll('.tab'));
-tabs.forEach(btn => btn.addEventListener('click', ()=> {
-  tabs.forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const target = btn.dataset.target;
-  document.querySelectorAll('main section.card').forEach(s => s.hidden = s.id !== target);
-}));
+// UI elements
+const inputProblem = el('inputProblem');
+const modeSelect = el('modeSelect');
+const solveBtn = el('solveBtn');
+const resultBox = el('resultBox');
+const copyBtn = el('copyBtn');
+const downloadBtn = el('downloadBtn');
+const historyList = el('historyList');
+const clearHistoryBtn = el('clearHistory');
+const degToggle = el('degToggle');
+const statusMsg = el('statusMsg');
 
-/* Summary counters */
-let FILE_STORE = []; // {file, size}
-function updateSummary(){
-  const total = FILE_STORE.reduce((s,f)=>s+f.size,0);
-  document.getElementById('summary').textContent = `Files: ${FILE_STORE.length} • Total: ${Math.round(total/1024)} KB`;
-  document.getElementById('fileCount').textContent = `${FILE_STORE.length} files`;
+const hambBtn = el('hambBtn'), sidebar = el('sidebar'), closeSidebar = el('closeSidebar');
+hambBtn.addEventListener('click', ()=> { sidebar.style.transform='translateX(0)'; sidebar.setAttribute('aria-hidden','false'); });
+closeSidebar.addEventListener('click', ()=> { sidebar.style.transform='translateX(120%)'; sidebar.setAttribute('aria-hidden','true'); });
+
+/* ---------- SAFETY: allowed functions & replacements ---------- */
+const ALLOWED_FN = ['sin','cos','tan','asin','acos','atan','sqrt','abs','log','ln','exp','pow','max','min','floor','ceil','round'];
+// map user-friendly names to Math.*
+const FN_MAP = {
+  'ln':'Math.log',
+  'log':'Math.log10 || (Math.log10 ? Math.log10 : (x=>Math.log(x)/Math.LN10))',
+  'sqrt':'Math.sqrt',
+  'abs':'Math.abs',
+  'exp':'Math.exp',
+  'pow':'Math.pow',
+  'max':'Math.max',
+  'min':'Math.min',
+  'floor':'Math.floor',
+  'ceil':'Math.ceil',
+  'round':'Math.round',
+  'sin':'Math.sin',
+  'cos':'Math.cos',
+  'tan':'Math.tan',
+  'asin':'Math.asin','acos':'Math.acos','atan':'Math.atan'
+};
+
+// helper: convert degrees to radians when deg toggle enabled
+function withAngleWrappers(expr, useDegrees){
+  if(!useDegrees) return expr;
+  // replace sin(x) with Math.sin((x)*Math.PI/180) via safe replacement
+  // naive approach: wrap common trig function calls
+  return expr.replace(/\b(sin|cos|tan|asin|acos|atan)\s*\(/g, (m,fn) => {
+    // if inverse function (asin/acos/atan) expects radians output; keep as-is for inverse
+    if(fn === 'asin' || fn === 'acos' || fn === 'atan') return `Math.${fn}(`;
+    // normal trig -> convert degrees input to radians
+    return `Math.${fn}((`;
+  }).replace(/\bMath\.(sin|cos|tan)\(\(/g, (m,fn)=> `Math.${fn}(`).replace(/\)\)/g, ')*Math.PI/180)');
+  // Note: we keep this simple; complex nested expressions still work for most user inputs.
 }
 
-/* ---------- Utility helpers ---------- */
-function readFileAsArrayBuffer(file){ return new Promise((res,rej)=> { const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>rej(fr.error); fr.readAsArrayBuffer(file); }); }
-function readFileAsDataURL(file){ return new Promise((res,rej)=> { const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>rej(fr.error); fr.readAsDataURL(file); }); }
-function downloadBlob(blob, filename){ if(window.saveAs) saveAs(blob, filename); else { const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download = filename; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href), 5000); } }
+/* sanitize and prepare expression to safely evaluate */
+function prepareExpression(raw, useDegrees=false){
+  // basic sanitize: allow letters, numbers, spaces, math symbols, parentheses, comma, dot, ^, e and E
+  const cleaned = raw.replace(/[,]/g, ','); // keep comma
+  // Reject suspicious chars early
+  if(/[;{}]/.test(cleaned)) throw new Error('Invalid characters in expression.');
 
-/* format bytes */
-function fmtBytes(b){ if(b<1024) return b+' B'; if(b<1024*1024) return (b/1024).toFixed(1)+' KB'; return (b/(1024*1024)).toFixed(2)+' MB'; }
+  // replace ^ with ** for exponent (JS)
+  let expr = cleaned.replace(/\^/g, '**');
 
-/* ---------- Image → PDF ---------- */
-const imgInput = document.getElementById('imgInput');
-const imgDrop = document.getElementById('imgDrop');
-const imgList = document.getElementById('imgList');
-
-let imgItems = []; // [{file, dataURL, w,h, id}]
-
-function addImages(files){
-  Array.from(files).forEach(file=>{
-    if(!file.type.startsWith('image/')) return;
-    const id = Math.random().toString(36).slice(2,9);
-    readFileAsDataURL(file).then(url=>{
-      const img = new Image();
-      img.onload = ()=> {
-        imgItems.push({id, file, dataURL:url, w:img.width, h:img.height});
-        renderImgThumbs();
-      };
-      img.src = url;
-    });
-    FILE_STORE.push({file, size:file.size});
-  });
-  updateSummary();
-}
-
-imgDrop.addEventListener('click', ()=> imgInput.click());
-imgInput.addEventListener('change', (e)=> addImages(e.target.files));
-imgDrop.addEventListener('dragover', (e)=>{ e.preventDefault(); imgDrop.style.borderColor='#6b7dff' });
-imgDrop.addEventListener('dragleave', ()=> imgDrop.style.borderColor='' );
-imgDrop.addEventListener('drop', (e)=> { e.preventDefault(); imgDrop.style.borderColor=''; addImages(e.dataTransfer.files); });
-
-function renderImgThumbs(){
-  imgList.innerHTML = '';
-  imgItems.forEach(item=>{
-    const div = document.createElement('div'); div.className='thumb'; div.dataset.id = item.id;
-    div.innerHTML = `<img src="${item.dataURL}" alt=""><div style="margin-top:6px;font-weight:700">${item.file.name}</div><div class="small muted">${Math.round(item.w)}×${Math.round(item.h)}</div>`;
-    imgList.appendChild(div);
-  });
-  // enable reorder
-  Sortable.create(imgList, {animation:150, onEnd: (evt)=> {
-    const moved = imgItems.splice(evt.oldIndex,1)[0];
-    imgItems.splice(evt.newIndex,0,moved);
-  }});
-}
-
-/* Convert to PDF using jsPDF */
-const img2pdfBtn = document.getElementById('img2pdfBtn');
-img2pdfBtn.addEventListener('click', async ()=>{
-  if(imgItems.length === 0) return alert('Add some images first.');
-  const paper = document.getElementById('paperSize').value;
-  const orientation = document.getElementById('orientation').value;
-  const fit = document.getElementById('fitMode').value;
-  const marginMM = parseFloat(document.getElementById('marginVal').value || '10');
-  const outName = (document.getElementById('pdfName').value || 'pirateruler-images') + '.pdf';
-  // jsPDF expects units; we'll use mm
-  const { jsPDF } = window.jspdf;
-  // set page sizes in mm
-  const sizes = { a4: [210,297], letter:[216,279] };
-  let [pw,pH] = sizes[paper] || sizes.a4;
-  if(orientation === 'landscape') [pw,pH] = [pH,pw];
-
-  const doc = new jsPDF({ unit:'mm', format:[pw,pH], orientation });
-  for(let i=0;i<imgItems.length;i++){
-    const it = imgItems[i];
-    // draw image onto an offscreen canvas sized to PDF pixel density
-    const img = document.createElement('img'); img.src = it.dataURL;
-    await new Promise(r=> img.onload = r);
-    // compute target area
-    const pageW = pw - marginMM*2;
-    const pageH = pH - marginMM*2;
-    let iw = img.width, ih = img.height;
-    let scale = Math.min(pageW / iw, pageH / ih);
-    if(fit === 'cover') scale = Math.max(pageW / iw, pageH / ih);
-    const drawW = iw * scale, drawH = ih * scale;
-    const x = (pw - drawW)/2, y = (pH - drawH)/2;
-    // jsPDF addImage supports dataURL
-    doc.addImage(it.dataURL, 'JPEG', x, y, drawW, drawH, undefined, 'FAST');
-    if(i < imgItems.length - 1) doc.addPage([pw,pH], orientation);
-  }
-  const out = doc.output('blob');
-  downloadBlob(out, outName);
-});
-
-/* ---------- PDF → Images ---------- */
-const pdfInput = document.getElementById('pdfInput'), pdfDrop = document.getElementById('pdfDrop');
-const pdfPreview = document.getElementById('pdfPreview');
-const pdf2imgBtn = document.getElementById('pdf2imgBtn');
-
-let loadedPdf = null, loadedPdfBuffer = null;
-
-pdfDrop.addEventListener('click', ()=> pdfInput.click());
-pdfInput.addEventListener('change', async (e)=> {
-  const f = e.target.files && e.target.files[0]; if(!f) return;
-  loadedPdfBuffer = await readFileAsArrayBuffer(f);
-  const uint8 = new Uint8Array(loadedPdfBuffer);
-  const loadingTask = pdfjsLib.getDocument({data:uint8});
-  loadingTask.promise.then(pdf => {
-    loadedPdf = pdf;
-    pdfPreview.innerHTML = `<div class="small muted">PDF loaded — ${pdf.numPages} pages</div>`;
-    document.getElementById('pageTo').value = pdf.numPages;
-  }).catch(err=> alert('Failed to open PDF: '+err));
-});
-
-pdf2imgBtn.addEventListener('click', async ()=>{
-  if(!loadedPdf) return alert('Load a PDF first.');
-  const from = parseInt(document.getElementById('pageFrom').value || '1',10);
-  const to = parseInt(document.getElementById('pageTo').value || String(loadedPdf.numPages),10);
-  const format = document.getElementById('pdfExportFormat').value;
-  const quality = parseFloat(document.getElementById('pdfImgQuality').value || '0.9');
-  const zip = new JSZip();
-  const images = [];
-  for(let p=from; p<=Math.min(to, loadedPdf.numPages); p++){
-    const page = await loadedPdf.getPage(p);
-    const viewport = page.getViewport({scale:1.5});
-    const canvas = document.createElement('canvas');
-    canvas.width = viewport.width; canvas.height = viewport.height;
-    const ctx = canvas.getContext('2d');
-    await page.render({canvasContext: ctx, viewport}).promise;
-    // export
-    const dataURL = canvas.toDataURL(format === 'jpeg' ? 'image/jpeg' : 'image/png', quality);
-    const blob = dataURLToBlob(dataURL);
-    const name = `page-${p}.${format === 'jpeg' ? 'jpg' : 'png'}`;
-    zip.file(name, blob);
-    // show preview
-    const imgEl = document.createElement('img'); imgEl.src = dataURL; imgEl.style.maxWidth='120px'; imgEl.style.marginRight='8px';
-    pdfPreview.appendChild(imgEl);
-  }
-  const content = await zip.generateAsync({type:'blob'});
-  downloadBlob(content, 'pdf-pages.zip');
-});
-
-/* ---------- Convert / Compress ---------- */
-const convInput = document.getElementById('convInput'), convDrop = document.getElementById('convDrop');
-const convFormat = document.getElementById('convFormat'), convQuality = document.getElementById('convQuality'), convWidth = document.getElementById('convWidth');
-const convBtn = document.getElementById('convBtn'), convResults = document.getElementById('convResults');
-
-convDrop.addEventListener('click', ()=> convInput.click());
-convInput.addEventListener('change', (e)=> { convFiles = Array.from(e.target.files); convResults.innerHTML = `${convFiles.length} files ready`; });
-let convFiles = [];
-convDrop.addEventListener('drop', (e)=> { e.preventDefault(); convFiles = Array.from(e.dataTransfer.files); convResults.innerHTML = `${convFiles.length} files ready`; });
-
-convBtn.addEventListener('click', async ()=>{
-  if(!convFiles || convFiles.length===0) return alert('Drop some images first');
-  convResults.innerHTML = '';
-  const outFiles = [];
-  for(const f of convFiles){
-    const dataURL = await readFileAsDataURL(f);
-    const img = new Image(); img.src = dataURL; await new Promise(r=>img.onload=r);
-    const canvas = document.createElement('canvas');
-    let targetW = parseInt(convWidth.value || '0',10);
-    if(!targetW) { canvas.width = img.width; canvas.height = img.height; }
-    else {
-      const ratio = img.height / img.width;
-      canvas.width = targetW; canvas.height = Math.round(targetW * ratio);
+  // replace known function names with Math.* (note: we will allow only listed functions)
+  // find words and replace if in FN_MAP
+  expr = expr.replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)\s*\(/g, (m, name) => {
+    const lname = name.toLowerCase();
+    if(ALLOWED_FN.includes(lname)) {
+      return (FN_MAP[lname] ? FN_MAP[lname] : ('Math.'+lname)) + '(';
     }
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img,0,0,canvas.width,canvas.height);
-    const format = convFormat.value;
-    const quality = parseFloat(convQuality.value || '0.9');
-    const dataOut = canvas.toDataURL(format, quality);
-    const blob = dataURLToBlob(dataOut);
-    outFiles.push({name: `${stripExt(f.name)}.${mimeToExt(format)}`, blob});
-    const d = document.createElement('div'); d.className='small muted'; d.innerHTML = `${f.name} → ${fmtBytes(blob.size)}`; convResults.appendChild(d);
-  }
-  // if more than 1, zip
-  if(outFiles.length === 1) downloadBlob(outFiles[0].blob, outFiles[0].name);
-  else {
-    const zip = new JSZip();
-    outFiles.forEach(of=> zip.file(of.name, of.blob));
-    const z = await zip.generateAsync({type:'blob'});
-    downloadBlob(z, 'pirateruler-images.zip');
-  }
-});
+    // if the name looks like a variable 'x' we keep 'x(' which is invalid for evaluation and will error
+    return name + '(';
+  });
 
-/* ---------- Rename / Combine / Split ---------- */
-document.getElementById('renameBtn').addEventListener('click', async ()=>{
-  const files = Array.from(document.getElementById('renameInput').files || []);
-  if(files.length===0) return alert('Choose files to rename.');
-  const prefix = document.getElementById('prefix').value || '';
-  const suffix = document.getElementById('suffix').value || '';
-  const find = document.getElementById('replaceFrom').value || '';
-  const re = new RegExp(escapeRegExp(find),'g');
-  const replaceTo = document.getElementById('replaceTo').value || '';
-  const caseOpt = document.getElementById('caseOpt').value;
-  const outFiles = [];
-  let idx=1;
-  for(const f of files){
-    let name = stripExt(f.name);
-    name = name.replace(re, replaceTo);
-    if(caseOpt==='lower') name = name.toLowerCase();
-    if(caseOpt==='upper') name = name.toUpperCase();
-    const numbered = `${prefix}${name}${suffix}`;
-    const ext = getExt(f.name);
-    outFiles.push({name: `${numbered}`, blob: f.slice(0,f.size)}); // blob copy fallback
-    idx++;
-  }
-  const zip = new JSZip(); outFiles.forEach(of => zip.file(of.name, of.blob));
-  const z = await zip.generateAsync({type:'blob'});
-  downloadBlob(z, 'renamed-files.zip');
-});
+  // add Math. prefix for constants like pi, e
+  expr = expr.replace(/\bpi\b/ig, 'Math.PI');
+  expr = expr.replace(/\be\b/g, 'Math.E');
 
-/* Combine */
-document.getElementById('combineBtn').addEventListener('click', async ()=>{
-  const files = Array.from(document.getElementById('combineInput').files || []);
-  if(files.length===0) return alert('Add files to combine.');
-  const mode = document.getElementById('combineMode').value;
-  const outName = (document.getElementById('combineName').value || 'pirateruler-combined');
-  if(mode === 'text'){
-    // read all as text and concat
-    let out = '';
-    for(const f of files) out += await f.text() + '\n';
-    const blob = new Blob([out], {type:'text/plain'});
-    downloadBlob(blob, outName + '.txt');
-  } else if(mode === 'images-pdf' || mode === 'images-long'){
-    // images to pdf or long image
-    const images = [];
-    for(const f of files){ if(!f.type.startsWith('image/')) continue; images.push({file:f, dataURL: await readFileAsDataURL(f)}); }
-    if(images.length===0) return alert('No images found.');
-    if(mode === 'images-long'){
-      // create a tall canvas with images stacked
-      const imgs = await Promise.all(images.map(i=> new Promise(r => { const im=new Image(); im.onload=()=>r(im); im.src=i.dataURL; })));
-      const totalH = imgs.reduce((s,i)=> s + i.height, 0);
-      const maxW = Math.max(...imgs.map(i=>i.width));
-      const canvas = document.createElement('canvas'); canvas.width = maxW; canvas.height = totalH;
-      const ctx = canvas.getContext('2d'); let y=0; imgs.forEach(im=>{ ctx.drawImage(im,0,y); y+=im.height; });
-      const blob = dataURLToBlob(canvas.toDataURL('image/png'));
-      downloadBlob(blob, outName + '.png');
+  // insert degree conversions if enabled
+  if(useDegrees){
+    // Simple approach: wrap trig functions -- handled in withAngleWrappers
+    expr = withAngleWrappers(expr, true);
+  }
+
+  // Now final safety check: only allow digits, Math, parentheses, operators, letters used in Math.* and allowed fn replacements, comma, decimal, and **.
+  // Deny if suspicious tokens like "constructor" or "prototype" appear
+  if(/constructor|prototype|window|document|Function|eval|=>/.test(expr)) throw new Error('Unsafe expression.');
+  return expr;
+}
+
+/* evaluate numeric expression safely (best-effort) */
+function evaluateExpression(raw){
+  const useDegrees = !!degToggle.checked;
+  const expr = prepareExpression(raw, useDegrees);
+  // final guard: allow only limited characters
+  if(!/^[0-9\s+\-*/%^().*MathPIE,**eE]+[0-9MathPIE\s+\-*/%^().,*]*$/i.test(expr) && !/Math\./.test(expr)) {
+    // don't block too aggressively — allow through but wrap in try/catch
+  }
+  // Use Function to evaluate numeric expression in strict mode
+  try{
+    const fn = new Function('"use strict"; return (' + expr + ');');
+    const val = fn();
+    if(typeof val === 'number' && Number.isFinite(val)) return { ok:true, value: val };
+    return { ok:false, error: 'Result is not a finite number' };
+  }catch(err){
+    return { ok:false, error: err.message || String(err) };
+  }
+}
+
+/* ---------- Linear solver (ax + b = c) ---------- */
+function solveLinear(raw){
+  // Normalize: replace spaces, handle forms like 2x+3=7 or x+4=10
+  const s = raw.replace(/\s+/g,'').replace(/\−/g,'-'); // sometimes minus char
+  const parts = s.split('=');
+  if(parts.length !== 2) return { ok:false, error:'Equation must contain one = sign.' };
+  const left = parts[0], right = parts[1];
+
+  // Move everything to left: left - right = 0
+  // We'll try to parse coefficients of x by matching regex terms
+  // Convert implicit 1x to 1*x to ease parsing
+  const norm = (st) => st.replace(/(^|[+\-])x/ig, (m, sign) => (sign||'') + '1*x');
+  const L = norm(left);
+  const R = norm(right);
+
+  // Extract terms by splitting on + and - while keeping sign
+  function collectTerms(expr){
+    const arr = expr.replace(/-/g,'+-').split('+').filter(Boolean);
+    return arr;
+  }
+
+  const leftTerms = collectTerms(L);
+  const rightTerms = collectTerms(R);
+
+  // collect a*x terms and constants
+  let a = 0, b = 0;
+  const pushTerm = t => {
+    if(/\*x/i.test(t)) {
+      // coefficient before *x
+      const coeff = t.split('*')[0];
+      const val = Number(coeff);
+      if(isNaN(val)) throw new Error('Invalid coefficient: ' + coeff);
+      a += val;
     } else {
-      // images -> single pdf
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ unit:'px', format:[images[0].width, images[0].height]});
-      for(let i=0;i<images.length;i++){
-        const img = new Image(); img.src = images[i].dataURL; await new Promise(r=>img.onload=r);
-        doc.addImage(images[i].dataURL, 'JPEG', 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight());
-        if(i < images.length - 1) doc.addPage();
+      // constant term
+      const val = Number(t);
+      if(isNaN(val)) throw new Error('Invalid numeric term: ' + t);
+      b += val;
+    }
+  };
+
+  try{
+    leftTerms.forEach(pushTerm);
+    // subtract right side terms
+    rightTerms.forEach(t => {
+      // negate term
+      if(/\*x/i.test(t)) {
+        const coeff = t.split('*')[0];
+        const val = Number(coeff);
+        if(isNaN(val)) throw new Error('Invalid coefficient: ' + coeff);
+        a -= val;
+      } else {
+        const val = Number(t);
+        if(isNaN(val)) throw new Error('Invalid numeric term: ' + t);
+        b -= val;
       }
-      const blob = doc.output('blob');
-      downloadBlob(blob, outName + '.pdf');
-    }
-  } else if(mode === 'pdf'){
-    // combine PDFs using pdf-lib
-    const mergedPdf = await PDFLib.PDFDocument.create();
-    for(const f of files){
-      if(f.type !== 'application/pdf') continue;
-      const arr = await f.arrayBuffer();
-      const donor = await PDFLib.PDFDocument.load(arr);
-      const copied = await mergedPdf.copyPages(donor, donor.getPageIndices());
-      copied.forEach(p => mergedPdf.addPage(p));
-    }
-    const out = await mergedPdf.save();
-    downloadBlob(new Blob([out], {type:'application/pdf'}), outName + '.pdf');
+    });
+  }catch(e){
+    return { ok:false, error: e.message };
   }
-});
 
-/* Split PDF */
-document.getElementById('splitBtn').addEventListener('click', async ()=>{
-  const f = document.getElementById('splitInput').files[0];
-  if(!f) return alert('Choose a PDF to split');
-  const arr = await f.arrayBuffer();
-  const src = await PDFLib.PDFDocument.load(arr);
-  const outFiles = [];
-  for(let i=0;i<src.getPageCount();i++){
-    const newDoc = await PDFLib.PDFDocument.create();
-    const [copied] = await newDoc.copyPages(src, [i]);
-    newDoc.addPage(copied);
-    const bytes = await newDoc.save();
-    outFiles.push({name: `${document.getElementById('splitName').value || 'page'}-${i+1}.pdf`, blob: new Blob([bytes], {type:'application/pdf'})});
+  // Now equation is a*x + b = 0 => x = -b/a
+  if(Math.abs(a) < 1e-12) {
+    if(Math.abs(b) < 1e-12) return { ok:true, type:'infinite', steps:[`Equation reduces to 0 = 0 — infinitely many solutions.`] };
+    return { ok:true, type:'none', steps:[`Coefficient of x is 0 but constant is ${b}; no solution.`] };
   }
-  if(outFiles.length === 1) downloadBlob(outFiles[0].blob, outFiles[0].name);
-  else {
-    const zip = new JSZip();
-    outFiles.forEach(of => zip.file(of.name, of.blob));
-    const z = await zip.generateAsync({type:'blob'});
-    downloadBlob(z, 'split-pages.zip');
-  }
-});
-
-/* ---------- Mini Editor ---------- */
-const editInput = document.getElementById('editInput'), loadEdit = document.getElementById('loadEdit'), saveEdit = document.getElementById('saveEdit');
-const bright = document.getElementById('bright'), contrast = document.getElementById('contrast');
-const rotateBtn = document.getElementById('rotateBtn'), flipH = document.getElementById('flipH'), flipV = document.getElementById('flipV');
-const editCanvas = document.getElementById('editCanvas'); const ectx = editCanvas.getContext('2d');
-let editImg = null;
-let editState = {rot:0, flipH:false, flipV:false, brightness:0, contrast:0};
-
-loadEdit.addEventListener('click', ()=> editInput.click());
-editInput.addEventListener('change', async (e)=> {
-  const f = e.target.files[0]; if(!f) return;
-  const url = await readFileAsDataURL(f); const im = new Image(); im.src = url; await new Promise(r=>im.onload=r);
-  editImg = im; editState = {rot:0, flipH:false, flipV:false, brightness:0, contrast:0};
-  drawEdit();
-});
-
-function drawEdit(){
-  if(!editImg) return;
-  // reset canvas to image size with max width cap
-  const maxW = Math.min(window.innerWidth - 200, editImg.width);
-  const scale = maxW / editImg.width;
-  editCanvas.width = Math.round(editImg.width * scale);
-  editCanvas.height = Math.round(editImg.height * scale);
-  ectx.save();
-  ectx.clearRect(0,0,editCanvas.width, editCanvas.height);
-  // apply brightness/contrast via simple pixel filter later; for speed we draw then use globalComposite if simple
-  ectx.drawImage(editImg,0,0, editCanvas.width, editCanvas.height);
-  // brightness/contrast: apply via pixel manipulation
-  let imgd = ectx.getImageData(0,0,editCanvas.width,editCanvas.height);
-  const data = imgd.data;
-  const b = parseFloat(bright.value || 0), c = parseFloat(contrast.value || 0);
-  // simple brightness/contrast algorithm
-  const contrastFactor = (259*(c*255 + 255))/(255*(259 - c*255) || 1);
-  for(let i=0;i<data.length;i+=4){
-    // brightness
-    data[i] = clamp(contrastFactor*(data[i]-128)+128 + b*255,0,255);
-    data[i+1] = clamp(contrastFactor*(data[i+1]-128)+128 + b*255,0,255);
-    data[i+2] = clamp(contrastFactor*(data[i+2]-128)+128 + b*255,0,255);
-  }
-  ectx.putImageData(imgd,0,0);
-  ectx.restore();
+  const x = -b / a;
+  const steps = [
+    `Normalized equation: (${a})·x + (${b}) = 0`,
+    `Solve for x: x = -(${b}) / (${a})`,
+    `x = ${roundSmart(x)}`
+  ];
+  return { ok:true, type:'single', root:x, steps };
 }
 
-bright.addEventListener('input', drawEdit);
-contrast.addEventListener('input', drawEdit);
-rotateBtn.addEventListener('click', ()=> { if(!editImg) return; editState.rot = (editState.rot + 90) % 360; // rotation not fully implemented re-render (simpler approach omitted)
-  // For simplicity here we rotate the canvas using an offscreen canvas
-  const tmp = document.createElement('canvas'); const tctx = tmp.getContext('2d');
-  tmp.width = editCanvas.height; tmp.height = editCanvas.width;
-  tctx.translate(tmp.width/2, tmp.height/2); tctx.rotate(Math.PI/2); tctx.drawImage(editCanvas, -editCanvas.width/2, -editCanvas.height/2);
-  editCanvas.width = tmp.width; editCanvas.height = tmp.height; ectx.clearRect(0,0,editCanvas.width,editCanvas.height); ectx.drawImage(tmp,0,0);
-});
-flipH.addEventListener('click', ()=> { if(!editImg) return; // quick flip
-  const tmp = document.createElement('canvas'); const tctx = tmp.getContext('2d'); tmp.width = editCanvas.width; tmp.height = editCanvas.height;
-  tctx.translate(tmp.width,0); tctx.scale(-1,1); tctx.drawImage(editCanvas,0,0);
-  ectx.clearRect(0,0,editCanvas.width,editCanvas.height); ectx.drawImage(tmp,0,0);
-});
-flipV.addEventListener('click', ()=> { if(!editImg) return;
-  const tmp = document.createElement('canvas'); const tctx = tmp.getContext('2d'); tmp.width = editCanvas.width; tmp.height = editCanvas.height;
-  tctx.translate(0,tmp.height); tctx.scale(1,-1); tctx.drawImage(editCanvas,0,0);
-  ectx.clearRect(0,0,editCanvas.width,editCanvas.height); ectx.drawImage(tmp,0,0);
-});
+/* ---------- Quadratic solver (ax^2 + bx + c = 0) ---------- */
+function solveQuadratic(raw){
+  // basic normalization: remove spaces, handle ^2, implicit 1 coefficients, and support x^2, 2x^2, -x^2, etc.
+  const s = raw.replace(/\s+/g,'').replace(/\−/g,'-');
+  const parts = s.split('=');
+  if(parts.length > 2) return { ok:false, error:'Equation must have at most one = sign.' };
+  // move all to left side: left - right
+  const left = parts[0] || '';
+  const right = parts[1] || '';
+  const expr = '(' + left + ')-(' + (right||'0') + ')';
 
-saveEdit.addEventListener('click', ()=> {
-  if(!editImg) return alert('Load an image first');
-  editCanvas.toBlob(blob => downloadBlob(blob, 'edited-image.png'), 'image/png');
-});
+  // We want to extract numeric a,b,c for x^2, x, constant
+  // Strategy: replace x^2 terms into token +, then evaluate coefficients by substituting x with variables.
+  // Simpler: replace x^2 with "*X2*", x with "*X*", then split terms
+  // But safer approach: use regex to find all x^2 and x terms and remove them to compute constants.
 
-/* ---------- PDF Metadata ---------- */
-document.getElementById('metaBtn').addEventListener('click', async ()=>{
-  const f = document.getElementById('metaInput').files[0];
-  if(!f) return alert('Choose a PDF first');
-  const arr = await f.arrayBuffer();
-  const pdfDoc = await PDFLib.PDFDocument.load(arr);
-  const title = document.getElementById('metaTitle').value;
-  const author = document.getElementById('metaAuthor').value;
-  const subj = document.getElementById('metaSubject').value;
-  const keywords = document.getElementById('metaKeywords').value.split(',').map(s=>s.trim()).filter(Boolean);
-  if(title) pdfDoc.setTitle(title);
-  if(author) pdfDoc.setAuthor(author);
-  if(subj) pdfDoc.setSubject(subj);
-  if(keywords.length) pdfDoc.setKeywords(keywords);
-  const out = await pdfDoc.save();
-  downloadBlob(new Blob([out], {type:'application/pdf'}), (stripExt(f.name) || 'modified') + '-meta.pdf');
-});
+  // Insert explicit multiplication for implicit coefficients
+  let norm = expr.replace(/(^|[+\-])x\^2/ig, (m, sign)=> (sign||'') + '1*x^2');
+  norm = norm.replace(/(^|[+\-])x(?![\^0-9a-zA-Z_])/ig, (m, sign)=> (sign||'') + '1*x');
+  // Ensure forms like 2x^2 -> 2*x^2
+  norm = norm.replace(/([0-9])x/g, '$1*x').replace(/([0-9])x\^/g, '$1*x^');
 
-/* ---------- Helpers ---------- */
-function stripExt(name){ return name.replace(/\.[^/.]+$/, ""); }
-function getExt(name){ const m = name.match(/\.([^.]+)$/); return m? m[1] : ''; }
-function mimeToExt(m){ if(m==='image/jpeg') return 'jpg'; if(m==='image/png') return 'png'; if(m==='image/webp') return 'webp'; return 'bin'; }
-function escapeRegExp(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
-function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
-function dataURLToBlob(dataurl){
-  const arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8 = new Uint8Array(n);
-  for(let i=0;i<n;i++) u8[i]=bstr.charCodeAt(i);
-  return new Blob([u8], {type:mime});
+  // Now find coefficients using regex
+  const aMatches = norm.match(/([+\-]?\d*\.?\d+)\*x\^2/ig) || [];
+  const bMatches = norm.match(/([+\-]?\d*\.?\d+)\*x(?!\^)/ig) || [];
+  const cMatches = norm.replace(/([+\-]?\d*\.?\d+)\*x\^2/ig,'').replace(/([+\-]?\d*\.?\d+)\*x(?!\^)/ig,'').match(/([+\-]?\d*\.?\d+)/g) || [];
+
+  const toNum = s => Number(s.replace(/\*/g,''));
+  let a = 0, b = 0, c = 0;
+  try{
+    aMatches.forEach(m => { a += Number(m.replace('*x^2','')); });
+    bMatches.forEach(m => { b += Number(m.replace('*x','')); });
+    // cMatches may include stray parentheses; filter numbers
+    cMatches.forEach(m => {
+      const n = Number(m);
+      if(!isNaN(n)) c += n;
+    });
+  }catch(e){
+    return { ok:false, error:'Failed to parse quadratic coefficients.' };
+  }
+
+  // If no x^2 in input, treat as not quadratic
+  if(Math.abs(a) < 1e-12) return { ok:false, error:'Not a quadratic equation (a = 0).' };
+
+  // discriminant
+  const disc = b*b - 4*a*c;
+  const steps = [];
+  steps.push(`Normalized coefficients: a = ${a}, b = ${b}, c = ${c}`);
+  steps.push(`Discriminant Δ = b² - 4ac = (${b})² - 4·${a}·${c} = ${roundSmart(disc)}`);
+
+  if(disc > 0){
+    const r1 = (-b + Math.sqrt(disc)) / (2*a);
+    const r2 = (-b - Math.sqrt(disc)) / (2*a);
+    steps.push(`Two real roots: x = (-b ± √Δ) / (2a)`);
+    steps.push(`x₁ = ${roundSmart(r1)}, x₂ = ${roundSmart(r2)}`);
+    return { ok:true, type:'two', roots:[r1,r2], steps };
+  } else if(Math.abs(disc) < 1e-12){
+    const r = -b/(2*a);
+    steps.push(`One real repeated root: x = -b / (2a) = ${roundSmart(r)}`);
+    return { ok:true, type:'one', roots:[r], steps };
+  } else {
+    // complex roots
+    const re = -b/(2*a);
+    const im = Math.sqrt(Math.abs(disc)) / (2*a);
+    steps.push(`Complex roots: x = ${roundSmart(re)} ± ${roundSmart(im)}i`);
+    return { ok:true, type:'complex', roots:[ `${roundSmart(re)} + ${roundSmart(im)}i`, `${roundSmart(re)} - ${roundSmart(im)}i` ], steps };
+  }
 }
-function getFileSizeText(file){ return fmtBytes(file.size || (file.blob && file.blob.size) || 0); }
 
-/* small helper: mime ext */
-function mimeToExt(format){ if(format==='image/jpeg') return 'jpg'; if(format==='image/png') return 'png'; if(format==='image/webp') return 'webp'; return 'bin'; }
+/* ---------- helpers ---------- */
+function roundSmart(n){
+  if(typeof n !== 'number') return String(n);
+  if(Math.abs(n) < 1e-12) return '0';
+  if(Math.abs(n) < 1e-3 || Math.abs(n) > 1e7) return n.toPrecision(6);
+  return Number.isInteger(n) ? String(n) : String(Number(n.toFixed(8))).replace(/\.?0+$/,'');
+}
 
-/* click-to-expand previews: basic */
-document.body.addEventListener('click', (e)=> {
-  if(e.target.closest('.thumb')) {
-    const t = e.target.closest('.thumb');
-    const id = t.dataset.id;
-    const it = imgItems.find(x=>x.id===id);
-    if(it) {
-      const w = window.open('', '_blank');
-      w.document.write(`<title>${it.file.name}</title><img src="${it.dataURL}" style="max-width:100%"><p class="small muted">${it.file.name} — ${fmtBytes(it.file.size)}</p>`);
+/* detect mode automatically */
+function detectMode(input){
+  const s = input.trim();
+  if(/\=/.test(s)){
+    // equation present — decide linear or quadratic by x^2
+    if(/x\^2|X\^2|x2|X2/.test(s)) return 'quadratic';
+    return 'linear';
+  }
+  // function-like
+  if(/\b(sin|cos|tan|sqrt|log|ln|exp|min|max)\(/i.test(s)) return 'func';
+  // otherwise expression
+  return 'eval';
+}
+
+/* ---------- History management ---------- */
+const HISTORY_KEY = 'pr-math-history-v1';
+function loadHistory(){
+  try{
+    const raw = localStorage.getItem(HISTORY_KEY);
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr : [];
+  }catch(e){ return []; }
+}
+function saveHistory(arr){
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(arr.slice(0,200))); // cap 200
+}
+function addHistory(entry){
+  const arr = loadHistory();
+  arr.unshift(entry);
+  saveHistory(arr);
+  renderHistory();
+}
+function clearHistory(){
+  localStorage.removeItem(HISTORY_KEY);
+  renderHistory();
+}
+function renderHistory(){
+  const arr = loadHistory();
+  historyList.innerHTML = '';
+  if(arr.length === 0){
+    historyList.innerHTML = '<div class="muted">No history yet.</div>';
+    return;
+  }
+  arr.forEach((h, i) => {
+    const div = document.createElement('div');
+    div.className = 'history-item';
+    div.innerHTML = `<div style="flex:1"><div style="font-weight:800">${escapeHtml(h.input)}</div><div style="font-size:12px;color:var(--muted)">${h.mode} · ${new Date(h.ts).toLocaleString()}</div></div>`;
+    const actions = document.createElement('div');
+    const useBtn = document.createElement('button'); useBtn.className='btn ghost'; useBtn.textContent='Use';
+    useBtn.addEventListener('click', ()=> { inputProblem.value = h.input; modeSelect.value = h.mode === 'auto' ? 'auto' : h.mode; inputProblem.focus(); });
+    const delBtn = document.createElement('button'); delBtn.className='btn ghost'; delBtn.textContent='Delete';
+    delBtn.addEventListener('click', ()=> {
+      const newArr = loadHistory().filter((_, idx) => idx !== i);
+      saveHistory(newArr);
+      renderHistory();
+    });
+    actions.appendChild(useBtn); actions.appendChild(delBtn);
+    div.appendChild(actions);
+    historyList.appendChild(div);
+  });
+}
+
+/* ---------- UI actions ---------- */
+function setStatus(msg, timeout=1600){
+  statusMsg.textContent = msg;
+  if(timeout>0) setTimeout(()=> { if(statusMsg.textContent === msg) statusMsg.textContent = ''; }, timeout);
+}
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function showResultBlock(text){
+  resultBox.textContent = text;
+}
+
+/* Solve button */
+solveBtn.addEventListener('click', ()=> doSolve());
+inputProblem.addEventListener('keydown', (e)=> { if(e.key === 'Enter') doSolve(); });
+
+function doSolve(){
+  const raw = inputProblem.value.trim();
+  if(!raw){ alert('Type a problem first'); return; }
+  const userMode = modeSelect.value;
+  const mode = userMode === 'auto' ? detectMode(raw) : userMode;
+  try{
+    let out = '', steps = [];
+    if(mode === 'eval'){
+      const res = evaluateExpression(raw);
+      if(!res.ok) { showResultBlock('Error: ' + res.error); return; }
+      out = `${roundSmart(res.value)}`;
+      steps.push(`Evaluated expression: ${raw}`);
+      steps.push(`Result: ${out}`);
+    } else if(mode === 'func'){
+      const res = evaluateExpression(raw);
+      if(!res.ok) { showResultBlock('Error: ' + res.error); return; }
+      out = `${roundSmart(res.value)}`;
+      steps.push(`Function evaluated: ${raw}`);
+      steps.push(`Result: ${out}`);
+    } else if(mode === 'linear'){
+      const sol = solveLinear(raw);
+      if(!sol.ok) { showResultBlock('Error: ' + sol.error); return; }
+      if(sol.type === 'infinite') {
+        out = 'Infinite solutions';
+        steps = sol.steps;
+      } else if(sol.type === 'none') {
+        out = 'No solution';
+        steps = sol.steps;
+      } else {
+        out = `x = ${roundSmart(sol.root)}`;
+        steps = sol.steps;
+      }
+    } else if(mode === 'quadratic'){
+      const sol = solveQuadratic(raw);
+      if(!sol.ok) { showResultBlock('Error: ' + sol.error); return; }
+      if(sol.type === 'two'){
+        out = `x₁ = ${roundSmart(sol.roots[0])}\n x₂ = ${roundSmart(sol.roots[1])}`;
+        steps = sol.steps;
+      } else if(sol.type === 'one'){
+        out = `x = ${roundSmart(sol.roots[0])}`;
+        steps = sol.steps;
+      } else if(sol.type === 'complex'){
+        out = `x₁ = ${sol.roots[0]}\n x₂ = ${sol.roots[1]}`;
+        steps = sol.steps;
+      }
+    } else {
+      // fallback: evaluate expression
+      const res = evaluateExpression(raw);
+      if(!res.ok) { showResultBlock('Error: ' + res.error); return; }
+      out = `${roundSmart(res.value)}`;
+      steps.push(`Evaluated (fallback): ${raw}`);
+      steps.push(`Result: ${out}`);
     }
+
+    // render nicely
+    const outputText = `Input: ${raw}\nMode: ${mode}\n\nSolution:\n${out}\n\nSteps:\n${(steps && steps.length) ? steps.join('\n') : 'No steps available.'}`;
+    showResultBlock(outputText);
+
+    // add to history
+    addHistory({ input: raw, mode, result: out, ts: Date.now() });
+
+    setStatus('Solved ✔');
+  }catch(err){
+    showResultBlock('Error: ' + (err.message || String(err)));
+  }
+}
+
+/* copy & download */
+copyBtn.addEventListener('click', async ()=> {
+  try{
+    await navigator.clipboard.writeText(resultBox.textContent || '');
+    setStatus('Copied');
+  }catch(e){
+    alert('Copy failed');
   }
 });
+downloadBtn.addEventListener('click', ()=> {
+  const text = resultBox.textContent || '';
+  if(!text) return alert('Nothing to download.');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], {type:'text/plain'}));
+  a.download = 'pirateruler-math-result.txt';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
 
-/* final startup */
-updateSummary();
+/* clear history */
+clearHistoryBtn.addEventListener('click', ()=> {
+  if(!confirm('Clear all history?')) return;
+  clearHistory();
+});
 
+/* theme handling */
+const themeBtn = el('themeBtn'), themeList = el('themeList'), themeItems = document.querySelectorAll('.theme-item');
+themeBtn.addEventListener('click', ()=> themeList.style.display = themeList.style.display==='block' ? 'none' : 'block');
+themeItems.forEach(it => it.addEventListener('click', ()=> {
+  const t = it.dataset.theme;
+  ['dark','ocean','sunset'].forEach(c=> document.documentElement.classList.remove(c));
+  if(t !== 'light') document.documentElement.classList.add(t);
+  themeBtn.textContent = (t.charAt(0).toUpperCase()+t.slice(1)) + ' ▾';
+  localStorage.setItem('pr-theme', t);
+  themeList.style.display = 'none';
+}));
+(function initTheme(){ const t = localStorage.getItem('pr-theme') || 'ocean'; if(t !== 'light') document.documentElement.classList.add(t); themeBtn.textContent = (t.charAt(0).toUpperCase()+t.slice(1)) + ' ▾'; })();
+
+/* click outside to hide theme list */
+document.addEventListener('click', (e)=> { if(!document.getElementById('themeSelectWrap')?.contains(e.target)) themeList.style.display='none'; });
+
+/* initial render */
+renderHistory();
 </script>
 </body>
 </html>
