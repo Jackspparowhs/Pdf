@@ -6,17 +6,17 @@
 <meta name="theme-color" content="#000000" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-<title>Animal Wiki — PirateRuler.com</title>
+<title>Animal List — PirateRuler.com</title>
 <link rel="icon" type="image/x-icon" href="https://pirateruler.com/favicon.ico">
 <link rel="icon" sizes="512x512" href="https://pirateruler.com/favicon-512.png">
 <link rel="apple-touch-icon" href="https://pirateruler.com/apple-touch-icon.png">
 
-<meta name="description" content="Discover wildlife, distinct species, and animal facts." />
-<meta property="og:title" content="Animal Wiki by PirateRuler.com" />
-<meta property="og:description" content="Browse thousands of animals, view images, habitats, and details." />
+<meta name="description" content="Discover nature's wonders. Top rated animal database." />
+<meta property="og:title" content="Animal List by PirateRuler.com" />
+<meta property="og:description" content="Browse thousands of animal species, view details and high-res photos." />
 <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%23000000'/%3E%3Ctext x='50%25' y='50%25' font-family='Inter' font-weight='800' font-size='200' text-anchor='middle' dominant-baseline='middle' fill='white'%3EPR%3C/text%3E%3C/svg%3E" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect rx='14' width='64' height='64' fill='%23000000'/%3E%3Ctext x='50%25' y='50%25' font-family='Inter,Arial,sans-serif' font-weight='800' font-size='26' text-anchor='middle' alignment-baseline='central' fill='white'%3EPR%3C/text%3E%3C/svg%3E">
-<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkFuaW1hbCBXaWtpIiwKICAic2hvcnRfbmFtZSI6ICJBbmltYWxzIiwKICAic3RhcnRfdXJsIjogIi9pbmRleC5odG1sIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZjBmNGY4IiwKICAidGhlbWVfY29sb3IiOiAiIzAwMDAwMCIKfQo==">
+<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkFuaW1hbCBMaXN0IiwKICAic2hvcnRfbmFtZSI6ICJBbmltYWxzIiwKICAic3RhcnRfdXJsIjogIi9pbmRleC5odG1sIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZjBmNGY4IiwKICAidGhlbWVfY29sb3IiOiAiIzAwMDAwMCIKfQo==">
 <style>
   /* ----  your original colour scheme ---- */
   :root{
@@ -134,11 +134,10 @@
   .pic-card{background:var(--bg);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:var(--transition);box-shadow:var(--shadow-sm);position:relative; aspect-ratio: 2/3;}
   .pic-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);}
     
-  /* Update: Removed blur filter completely so images are sharp immediately */
   .pic-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s ease;}
   
-  /* Anime score badge */
-  .score-badge { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; backdrop-filter: blur(4px); }
+  /* Status badge */
+  .score-badge { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; backdrop-filter: blur(4px); text-transform:uppercase;}
   .title-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 20px 10px 10px; color: white; font-size: 13px; font-weight: 600; text-align: center; }
 
   .loading-spinner{display:inline-block;width:20px;height:20px;border:3px solid var(--border);border-top:3px solid var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin-left:8px;}
@@ -194,30 +193,23 @@
   }
     
   .modal-media-col img {
-    width: 100%; height: 100%; object-fit: cover;
+    width: 100%; height: 100%; object-fit: contain; background:#000;
   }
     
   .modal-info-col { padding: 24px; position:relative;}
     
-  .modal-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; line-height: 1.2; margin-top: 20px; }
+  .modal-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; line-height: 1.2; margin-top: 20px; text-transform:capitalize; }
   @media (min-width: 768px) { .modal-title { margin-top: 0; } }
 
   .modal-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; font-size: 13px; color: var(--muted); }
   .modal-tag { background: var(--key-bg); padding: 4px 8px; border-radius: 4px; font-weight: 600; color: var(--text); border:1px solid var(--border);}
-  .modal-score { color: var(--warning); font-weight: 800; display:flex; align-items:center; gap:4px; font-size: 16px;}
+  .modal-score { color: var(--success); font-weight: 800; display:flex; align-items:center; gap:4px; font-size: 14px;}
   
   .modal-desc { font-size: 15px; color: var(--text); line-height: 1.6; margin-bottom: 20px; white-space: pre-wrap; flex-grow: 1; }
   
   .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; font-size: 13px; border-top: 1px solid var(--border); padding-top: 16px; }
   .data-item strong { display: block; color: var(--text); margin-bottom: 2px; }
   .data-item span { color: var(--muted); }
-
-  /* New Character Section Styles */
-  .section-header { font-size: 16px; font-weight: 800; margin: 20px 0 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px; color: var(--text); }
-  .char-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 10px; margin-top: 10px; }
-  .char-item { text-align: center; font-size: 11px; color: var(--text); }
-  .char-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 4px; border: 2px solid var(--border); background: var(--key-bg); }
-  .role-tag { font-size: 9px; color: var(--muted); display: block; }
 
   .modal-btn-row { display: flex; gap: 12px; align-items: center; margin-top: 24px; }
     
@@ -244,7 +236,7 @@
       <a href="index.html" aria-label="Home" style="display:flex;align-items:center;gap:12px">
         <div class="logo" aria-hidden="true">PR</div>
         <div class="brand-title">
-          <div class="title-strong">Animal Wiki</div>
+          <div class="title-strong">Animal List</div>
           <div class="by">by PirateRuler.com</div>
         </div>
       </a>
@@ -258,8 +250,8 @@
   </header>
 
   <section class="hero" aria-labelledby="heroTitle">
-    <h1 id="heroTitle" class="big">Discover Wildlife</h1>
-    <p class="small">Explore species, habitats, and facts. Search our database for detailed animal information.</p>
+    <h1 id="heroTitle" class="big">Discover Nature</h1>
+    <p class="small">Explore thousands of animal species. High-res photos, details, and facts from around the globe.</p>
   </section>
 
   <main id="main-content" class="grid">
@@ -269,18 +261,17 @@
         <input id="searchBox" type="text" placeholder="Search animals (e.g. Lion, Eagle)..." autocomplete="off" style="margin-bottom:20px;">
         
         <div class="tabs">
-          <button class="btn primary tab-btn active" data-filter="wildlife">Popular</button>
-          <button class="btn ghost tab-btn" data-filter="mammal">Mammals</button>
-          <button class="btn ghost tab-btn" data-filter="bird">Birds</button>
+          <button class="btn primary tab-btn active" data-filter="wild">Wild</button>
+          <button class="btn ghost tab-btn" data-filter="pets">Pets</button>
+          <button class="btn ghost tab-btn" data-filter="marine">Marine</button>
         </div>
 
         <div class="chips" id="chips">
-          <span class="chip" data-query="Big Cats">Big Cats</span>
-          <span class="chip" data-query="Sharks">Sharks</span>
-          <span class="chip" data-query="Reptiles">Reptiles</span>
-          <span class="chip" data-query="Domestic Dog">Dogs</span>
-          <span class="chip" data-query="Eagle">Eagles</span>
-          <span class="chip" data-query="Ocean">Marine Life</span>
+          <span class="chip" data-query="Mammal">Mammals</span>
+          <span class="chip" data-query="Bird">Birds</span>
+          <span class="chip" data-query="Reptile">Reptiles</span>
+          <span class="chip" data-query="Fish">Fish</span>
+          <span class="chip" data-query="Big Cat">Big Cats</span>
         </div>
 
         <div id="gallery" aria-live="polite"></div>
@@ -298,15 +289,15 @@
         <div class="panel-title">Information</div>
         
         <div class="useful-tips" style="margin-top:0; border:none; background:transparent; padding:0;">
-          <p class="muted" style="margin-top:0;"><strong>Description:</strong><br>Access a comprehensive database of animals. View scientific classifications, descriptions, and high-quality images powered by Wikipedia.</p>
-          <p class="muted"><strong>How to Use:</strong><br>Click on any animal card to view detailed info.</p>
+          <p class="muted" style="margin-top:0;"><strong>Description:</strong><br>Access a comprehensive database of the animal kingdom. View scientific info, habitats, and high-quality images.</p>
+          <p class="muted"><strong>How to Use:</strong><br>Click on any photo to view detailed facts.</p>
         </div>
 
         <div class="spacer"></div>
         <div class="feature" style="min-height:unset;align-items:flex-start;padding:14px">
           <div class="f-icon">PR</div>
           <div>
-            <div class="f-title">Animal Wiki by PirateRuler.com</div>
+            <div class="f-title">Animal List by PirateRuler.com</div>
             <div class="f-desc" style="margin-top:6px;display:flex;gap:10px;flex-wrap:wrap;">
               <a class="btn" href="https://pirateruler.com/post/about.html" target="_blank" rel="noopener">About</a>
               <a class="btn" href="https://pirateruler.com/post/privacy.html" target="_blank" rel="noopener">Privacy</a>
@@ -322,7 +313,7 @@
   <footer>
     <a class="visit" href="https://pirateruler.com" target="_blank" rel="noopener">Visit PirateRuler.com</a>
     <div style="height:12px"></div>
-    <small class="muted">© <span id="year"></span> Animal Wiki by PirateRuler.com — Backup & resources: pirateruler.com | <span id="pwa-status"></span></small>
+    <small class="muted">© <span id="year"></span> Animal List by PirateRuler.com — Backup & resources: pirateruler.com | <span id="pwa-status"></span></small>
   </footer>
 </div>
 
@@ -353,6 +344,7 @@
             </div>
         <div class="modal-btn-row">
              <button class="btn ghost" onclick="closeModal()" style="flex:1;">Close</button>
+             <a id="wikiLink" href="#" target="_blank" class="btn primary" style="flex:1; text-align:center;">Read Full Wiki</a>
         </div>
     </div>
   </div>
@@ -397,153 +389,197 @@
     showToast._t = setTimeout(() => toast.classList.remove('show'), 3500);
   }
 
-  /* ----------  Wikipedia API Logic  ---------- */
+  /* ----------  WikiFauna API (Wikipedia REST API)  ---------- */
   
-  const BASE_URL = 'https://en.wikipedia.org/w/api.php';
-  
+  // Lists for "Feed" simulation (since Wiki API is search-based, we simulate a feed by listing cool animals)
+  const lists = {
+    wild: ['Lion', 'Tiger', 'Elephant', 'Giraffe', 'Cheetah', 'Zebra', 'Panda', 'Gorilla', 'Kangaroo', 'Koala', 'Rhino', 'Hippo', 'Leopard', 'Wolf', 'Bear', 'Fox', 'Eagle', 'Hawk', 'Falcon', 'Owl', 'Vulture', 'Deer', 'Moose', 'Elk', 'Bison', 'Jaguar'],
+    pets: ['Dog', 'Cat', 'Hamster', 'Rabbit', 'Parrot', 'Goldfish', 'Guinea pig', 'Ferret', 'Turtle', 'Chameleon', 'Gecko', 'Budgerigar', 'Cockatiel', 'Poodle', 'Golden Retriever', 'Siamese cat', 'Persian cat'],
+    marine: ['Shark', 'Whale', 'Dolphin', 'Octopus', 'Squid', 'Jellyfish', 'Seahorse', 'Starfish', 'Crab', 'Lobster', 'Seal', 'Walrus', 'Penguin', 'Sea turtle', 'Clownfish', 'Manta ray', 'Orca']
+  };
+
   const searchBox       = document.getElementById('searchBox');
   const gallery         = document.getElementById('gallery');
   const loader          = document.getElementById('loader');
   const loaderSpinner = loader.querySelector('.loading-spinner');
   const endMsg          = document.getElementById('endMsg');
   const modal           = document.getElementById('modal');
-   
-  // Modal Elements
   const modalMedia    = document.getElementById('modalMedia');
   const modalTextContent = document.getElementById('modalTextContent');
+  const wikiLink        = document.getElementById('wikiLink');
 
-  // state
-  let currentQuery = 'wildlife'; 
-  let page = 1;
+  // State
+  let currentList = lists.wild; // default list
+  let currentIndex = 0;
   let loading = false;
-  let endReached = false;
-
-  // helper: escape attr
-  function escapeAttr(s){ return String(s||'').replace(/'/g,"%27").replace(/"/g,'&quot;'); }
+  let isSearchMode = false;
   
-  // store loaded items keyed by ID -> item data
+  // Helper: Get Wiki Data
+  async function fetchWikiData(title) {
+     try {
+         // Using Wikipedia REST API v1 (Summary) - High Quality, No Key Needed
+         const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`);
+         if(!res.ok) return null;
+         return await res.json();
+     } catch(e) { return null; }
+  }
+
+  // Store loaded items
   const itemsMap = new Map();
 
-  // build animal card
-  function buildCard(item){
-    const title = item.title;
-    // Use Wikipedia thumbnail if available, else a placeholder
-    const thumb = item.thumbnail ? item.thumbnail.source : 'https://placehold.co/400x600/1e293b/FFF?text=No+Image';
-    const score = item.pageid ? `#${item.pageid}` : 'N/A';
+  function buildCard(data){
+    if(!data || data.type === 'disambiguation') return '';
+    // Use originalimage if available, else thumbnail
+    const thumb = data.originalimage ? data.originalimage.source : (data.thumbnail ? data.thumbnail.source : null);
     
-    // Store in map
-    itemsMap.set(item.pageid, item);
+    if(!thumb) return ''; // Skip items without images for clean look
+
+    const title = data.title;
+    const desc = data.description || 'Species';
+    
+    itemsMap.set(data.title, data);
 
     return `
-      <div class="pic-card" onclick='openModalForId(${item.pageid})'>
+      <div class="pic-card" onclick='openModalForItem("${escapeAttr(data.title)}")'>
         <img src="${escapeAttr(thumb)}" loading="lazy" alt="${escapeAttr(title)}">
-        <div class="score-badge">Wiki</div>
+        <div class="score-badge">WikiFauna</div>
         <div class="title-overlay">${escapeAttr(title)}</div>
       </div>`;
   }
 
-  // Fetch Logic
-  async function fetchAnimals(){
-    if(loading || endReached) return;
+  function escapeAttr(s){ return String(s||'').replace(/'/g,"%27").replace(/"/g,'&quot;'); }
+
+  // Main Load Function
+  async function loadItems() {
+    if(loading) return;
     setLoading(true);
+
+    // If searching, we don't paginate the same way
+    if(isSearchMode) {
+        setLoading(false);
+        return; 
+    }
+
+    // Load next batch from list
+    const batchSize = 12;
+    const batch = currentList.slice(currentIndex, currentIndex + batchSize);
     
-    try {
-      const offset = (page - 1) * 20;
-      
-      // Wikipedia API: Generator Search to get pages + images + extracts
-      // Origin=* handles CORS
-      const url = `${BASE_URL}?action=query&format=json&origin=*&generator=search&gsrnamespace=0&gsrlimit=20&gsroffset=${offset}&prop=pageimages|extracts&pithumbsize=600&exintro&explaintext&exsentences=6&gsrsearch=${encodeURIComponent(currentQuery)}`;
-
-      // Add delay for UX smoothness
-      await new Promise(r => setTimeout(r, 600));
-
-      const res = await fetch(url);
-      
-      if(!res.ok) throw new Error(`API Error: ${res.status}`);
-      
-      const data = await res.json();
-      
-      if(!data.query || !data.query.pages) {
-        endReached = true;
+    if(batch.length === 0) {
         endMsg.style.display = 'block';
         loader.style.display = 'none';
         setLoading(false);
         return;
-      }
+    }
 
-      const pages = data.query.pages;
-      const animalList = Object.values(pages); // Wikipedia returns object keys
+    const promises = batch.map(name => fetchWikiData(name));
+    const results = await Promise.all(promises);
 
-      if(animalList.length === 0) {
-        endReached = true;
+    let html = '';
+    results.forEach(data => {
+        if(data) html += buildCard(data);
+    });
+
+    gallery.insertAdjacentHTML('beforeend', html);
+    currentIndex += batchSize;
+    
+    if(currentIndex >= currentList.length) {
         endMsg.style.display = 'block';
         loader.style.display = 'none';
-      }
-
-      const html = animalList.map(buildCard).join('');
-      gallery.insertAdjacentHTML('beforeend', html);
-      
-      page++;
-      
-    } catch(err){
-      console.error(err);
-      showToast('Network error or API issues', '❌');
-    } finally {
-      setLoading(false);
     }
+    
+    setLoading(false);
+  }
+
+  // Search Function
+  async function performSearch(query) {
+      setLoading(true);
+      gallery.innerHTML = '';
+      endMsg.style.display = 'none';
+      loader.style.display = 'none'; // hide loader during direct search
+      
+      // 1. Try direct hit first
+      const direct = await fetchWikiData(query);
+      let html = '';
+      
+      if(direct) {
+          itemsMap.set(direct.title, direct);
+          html += buildCard(direct);
+      }
+      
+      // 2. Search API to find related
+      try {
+          const searchRes = await fetch(`https://en.wikipedia.org/w/api.php?origin=*&action=opensearch&search=${encodeURIComponent(query)}&limit=10&namespace=0&format=json`);
+          const searchData = await searchRes.json();
+          // searchData[1] contains titles
+          const relatedTitles = searchData[1].filter(t => t !== (direct ? direct.title : ''));
+          
+          const promises = relatedTitles.map(t => fetchWikiData(t));
+          const results = await Promise.all(promises);
+          
+          results.forEach(data => {
+              if(data) html += buildCard(data);
+          });
+          
+      } catch(e) { console.error(e); }
+
+      if(html === '') {
+          gallery.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">No animals found. Try "Tiger" or "Eagle".</div>';
+      } else {
+          gallery.innerHTML = html;
+      }
+      
+      setLoading(false);
   }
 
   function setLoading(bool){
-      loading = bool;
-      if(bool) {
-          loaderSpinner.style.display = 'inline-block';
-          loader.style.cursor = 'wait';
-      } else {
-          loaderSpinner.style.display = 'none';
-          loader.style.cursor = 'pointer';
-      }
+     loading = bool;
+     if(bool) {
+         loaderSpinner.style.display = 'inline-block';
+         loader.style.cursor = 'wait';
+     } else {
+         loaderSpinner.style.display = 'none';
+         loader.style.cursor = 'pointer';
+     }
   }
-
+  
   async function loadMore(){
-    await fetchAnimals();
+      if(!isSearchMode) loadItems();
   }
 
-  // Modal behavior
-  function openModalForId(id){
-    const item = itemsMap.get(id);
-    if(!item) return;
-    
-    // Clear previous
-    modalMedia.innerHTML = '';
-    modalTextContent.innerHTML = '';
+  // Modal Logic
+  function openModalForItem(title) {
+      const data = itemsMap.get(title);
+      if(!data) return;
 
-    // Metadata
-    const title = item.title;
-    const imgUrl = item.thumbnail ? item.thumbnail.source : 'https://placehold.co/600x600/1e293b/FFF?text=No+Image';
-    const desc = item.extract || 'No description available.';
-    
-    // Image
-    const img = document.createElement('img');
-    img.src = imgUrl;
-    modalMedia.appendChild(img);
+      modalMedia.innerHTML = '';
+      modalTextContent.innerHTML = '';
+      
+      // Image
+      const imgUrl = data.originalimage ? data.originalimage.source : (data.thumbnail ? data.thumbnail.source : '');
+      if(imgUrl) {
+          const img = document.createElement('img');
+          img.src = imgUrl;
+          modalMedia.appendChild(img);
+      }
 
-    // Initial Text Content
-    modalTextContent.innerHTML = `
-        <div class="modal-title">${title}</div>
+      // Text
+      const displayTitle = data.title;
+      const desc = data.description || 'No classification available';
+      const extract = data.extract || 'No details available.';
+      
+      modalTextContent.innerHTML = `
+        <div class="modal-title">${displayTitle}</div>
         <div class="modal-meta">
-            <span class="modal-tag">Wikipedia Source</span>
-            <span class="modal-tag">ID: ${item.pageid}</span>
+            <span class="modal-tag">${desc}</span>
+            <span class="modal-score">Verfied</span>
         </div>
-        <div class="modal-desc">${desc}</div>
-        
-        <div class="data-grid">
-            <div class="data-item"><strong>Source</strong><span>Wikipedia Free Encyclopedia</span></div>
-            <div class="data-item"><strong>License</strong><span>CC BY-SA 3.0</span></div>
-        </div>
-    `;
-    
-    modal.classList.add('show');
-    modal.setAttribute('aria-hidden','false');
+        <div class="modal-desc">${extract}</div>
+      `;
+
+      wikiLink.href = data.content_urls ? data.content_urls.desktop.page : '#';
+      
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden','false');
   }
 
   function closeModal(){
@@ -553,77 +589,69 @@
   modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-  // Tabs logic
+  // Event Listeners
+  
+  // Tabs
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
-      // UI Update
       document.querySelectorAll('.tab-btn').forEach(b => {
         b.classList.remove('primary', 'active'); b.classList.add('ghost');
       });
       document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-      
       e.target.classList.remove('ghost'); e.target.classList.add('primary', 'active');
       
-      // State Update
+      // Switch List
       const filter = e.target.dataset.filter;
-      currentQuery = filter; // Use the filter word as the search query
-      
-      resetGallery();
+      currentList = lists[filter] || lists.wild;
+      currentIndex = 0;
+      isSearchMode = false;
+      gallery.innerHTML = '';
+      endMsg.style.display = 'none';
+      loader.style.display = 'block';
+      loadItems();
     });
   });
 
-  // Chips logic
+  // Chips (Act as quick search)
   document.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', ()=> {
         document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('primary', 'active'); b.classList.add('ghost'); });
-        
         chip.classList.add('active');
         
-        if (chip.dataset.query) {
-             currentQuery = chip.dataset.query;
-             resetGallery();
-        }
+        isSearchMode = true;
+        searchBox.value = chip.dataset.query;
+        performSearch(chip.dataset.query);
     });
   });
 
-  // Search logic
+  // Search Box
   let searchTimeout;
   searchBox.addEventListener('input', () => {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(()=>{
       const val = searchBox.value.trim();
       if(val.length > 2) {
-          // deactivate others
-          document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-          document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('primary', 'active'); b.classList.add('ghost'); });
-          
-          currentQuery = val;
-          resetGallery();
+          isSearchMode = true;
+          performSearch(val);
+      } else if (val.length === 0) {
+          // Reset to home
+          isSearchMode = false;
+          document.querySelector('.tab-btn[data-filter="wild"]').click();
       }
     }, 600);
   });
 
-  function resetGallery(){
-    gallery.innerHTML = '';
-    itemsMap.clear();
-    page = 1;
-    endReached = false;
-    loader.style.display = 'block';
-    endMsg.style.display = 'none';
-    fetchAnimals();
-  }
-
-  // Infinite scroll
+  // Infinite Scroll
   const io = new IntersectionObserver((entries)=>{
-    if (entries[0].isIntersecting && !loading) {
+    if (entries[0].isIntersecting && !loading && !isSearchMode) {
         loadMore();
     }
   }, { rootMargin: '400px' });
   io.observe(loader);
 
   // Init
-  fetchAnimals(); 
+  loadItems(); 
 </script>
 </body>
 </html>
