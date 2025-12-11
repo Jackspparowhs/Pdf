@@ -14,14 +14,14 @@
 <meta name="description" content="Discover wildlife, endangered species, and animal details." />
 <meta property="og:title" content="Animal List by PirateRuler.com" />
 <meta property="og:description" content="Browse thousands of animals, view images, habitat and details." />
-<meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%2310b981'/%3E%3Ctext x='50%25' y='50%25' font-family='Inter' font-weight='800' font-size='200' text-anchor='middle' dominant-baseline='middle' fill='white'%3EPR%3C/text%3E%3C/svg%3E" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect rx='14' width='64' height='64' fill='%2310b981'/%3E%3Ctext x='50%25' y='50%25' font-family='Inter,Arial,sans-serif' font-weight='800' font-size='26' text-anchor='middle' alignment-baseline='central' fill='white'%3EPR%3C/text%3E%3C/svg%3E">
+<meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%23000000'/%3E%3Ctext x='50%25' y='50%25' font-family='Inter' font-weight='800' font-size='200' text-anchor='middle' dominant-baseline='middle' fill='white'%3EPR%3C/text%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect rx='14' width='64' height='64' fill='%23000000'/%3E%3Ctext x='50%25' y='50%25' font-family='Inter,Arial,sans-serif' font-weight='800' font-size='26' text-anchor='middle' alignment-baseline='central' fill='white'%3EPR%3C/text%3E%3C/svg%3E">
 <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkFuaW1hbCBMaXN0IiwKICAic2hvcnRfbmFtZSI6ICJBbmltYWxzIiwKICAic3RhcnRfdXJsIjogIi9pbmRleC5odG1sIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZjBmNGY4IiwKICAidGhlbWVfY29sb3IiOiAiIzAwMDAwMCIKfQo==">
 <style>
   /* ----  your original colour scheme ---- */
   :root{
     --bg:#f0f4f8; --card:#ffffff; --muted:#64748b; --text:#0f172a;
-    --border:#e2e8f0; --accent:#10b981; /* Changed accent to Green for Animals */
+    --border:#e2e8f0; --accent:#000000; /* Reverted to Black */
     --key-bg:#f1f5f9;
     --success:#10b981; --warning:#f59e0b; --error:#ef4444;
     --shadow-sm:0 1px 2px 0 rgba(0,0,0,0.05);
@@ -32,7 +32,7 @@
   }
   html.dark {
     --bg:#0f172a; --card:#1e293b; --muted:#94a3b8; --text:#f1f5f9;
-    --border:#334155; --accent:#10b981; --key-bg:#334155;
+    --border:#334155; --accent:#ffffff; --key-bg:#334155;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html{scroll-behavior:smooth;}
@@ -66,8 +66,8 @@
   .card h2{margin:0 0 12px 0;font-size:22px;font-weight:800;letter-spacing:-0.5px;display:flex;align-items:center;gap:8px;}
   .hint{color:var(--muted);font-size:14px;margin-bottom:16px;line-height:1.5;}
   input[type="text"],input[type="number"],input[type="date"],input[type="color"],input[type="range"],select,textarea{width:100%;padding:14px;border-radius:var(--radius-md);border:1px solid var(--border);font-size:15px;background:var(--bg);color:var(--text);transition:var(--transition);box-shadow:var(--shadow-sm);font-family:inherit;}
-  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(16, 185, 129,0.1);}
-  .dark input:focus,.dark select:focus,.dark textarea:focus{box-shadow:0 0 0 3px rgba(16, 185, 129,0.2);}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
+  .dark input:focus,.dark select:focus,.dark textarea:focus{box-shadow:0 0 0 3px rgba(96,165,250,0.2);}
   .row{display:flex;gap:12px;flex-wrap:wrap;}
   .row>*{flex:1;min-width:120px;}
   .primary{background:var(--accent);color:var(--bg);padding:10px 16px;border-radius:var(--radius-md);border:1px solid var(--accent);font-weight:700;cursor:pointer;transition:var(--transition);box-shadow:var(--shadow-sm); text-decoration:none;}
@@ -137,7 +137,7 @@
     
   .pic-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s ease;}
   
-  /* Anime score badge -> now reused for Type/Status */
+  /* Badge for type */
   .score-badge { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; backdrop-filter: blur(4px); }
   .title-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 20px 10px 10px; color: white; font-size: 13px; font-weight: 600; text-align: center; }
 
@@ -148,8 +148,8 @@
   .no-more:hover{background:var(--key-bg);}
     
   #searchBox{width:100%;padding:14px;border-radius:var(--radius-md);border:1px solid var(--border);font-size:15px;background:var(--bg);color:var(--text);transition:var(--transition);box-shadow:var(--shadow-sm);}
-  #searchBox:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(16, 185, 129,0.1);}
-  .dark #searchBox:focus{box-shadow:0 0 0 3px rgba(16, 185, 129,0.2);}
+  #searchBox:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
+  .dark #searchBox:focus{box-shadow:0 0 0 3px rgba(96,165,250,0.2);}
     
   /* ----  modal updated for Screenshot 1 Look ---- */
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:2000;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s ease;}
@@ -194,7 +194,8 @@
   }
     
   .modal-media-col img {
-    width: 100%; height: 100%; object-fit: cover;
+    /* Changed to Contain so the full animal fits */
+    width: 100%; height: 100%; object-fit: contain; background:#000;
   }
     
   .modal-info-col { padding: 24px; position:relative;}
@@ -204,20 +205,12 @@
 
   .modal-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; font-size: 13px; color: var(--muted); }
   .modal-tag { background: var(--key-bg); padding: 4px 8px; border-radius: 4px; font-weight: 600; color: var(--text); border:1px solid var(--border);}
-  .modal-score { color: var(--accent); font-weight: 800; display:flex; align-items:center; gap:4px; font-size: 16px;}
   
   .modal-desc { font-size: 15px; color: var(--text); line-height: 1.6; margin-bottom: 20px; white-space: pre-wrap; flex-grow: 1; }
   
   .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; font-size: 13px; border-top: 1px solid var(--border); padding-top: 16px; }
   .data-item strong { display: block; color: var(--text); margin-bottom: 2px; }
   .data-item span { color: var(--muted); }
-
-  /* New Character Section Styles */
-  .section-header { font-size: 16px; font-weight: 800; margin: 20px 0 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px; color: var(--text); }
-  .char-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 10px; margin-top: 10px; }
-  .char-item { text-align: center; font-size: 11px; color: var(--text); }
-  .char-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 4px; border: 2px solid var(--border); background: var(--key-bg); }
-  .role-tag { font-size: 9px; color: var(--muted); display: block; }
 
   .modal-btn-row { display: flex; gap: 12px; align-items: center; margin-top: 24px; }
     
@@ -299,7 +292,7 @@
         
         <div class="useful-tips" style="margin-top:0; border:none; background:transparent; padding:0;">
           <p class="muted" style="margin-top:0;"><strong>Description:</strong><br>Access a comprehensive database of animals. View high-quality images and learn about their habitat and behavior.</p>
-          <p class="muted"><strong>How to Use:</strong><br>Click on any animal card to view detailed Wiki info.</p>
+          <p class="muted"><strong>How to Use:</strong><br>Click on any animal card to view detailed info.</p>
         </div>
 
         <div class="spacer"></div>
@@ -353,7 +346,6 @@
             </div>
         <div class="modal-btn-row">
              <button class="btn ghost" onclick="closeModal()" style="flex:1;">Close</button>
-             <a id="wikiLink" href="#" target="_blank" class="btn primary" style="flex:1; text-align:center;">Read on Wiki</a>
         </div>
     </div>
   </div>
@@ -413,7 +405,6 @@
   // Modal Elements
   const modalMedia    = document.getElementById('modalMedia');
   const modalTextContent = document.getElementById('modalTextContent');
-  const wikiLink      = document.getElementById('wikiLink');
 
   // state
   let currentQuery = 'List of animals'; // Default initial search
@@ -431,7 +422,7 @@
   function buildCard(animal){
     const title = animal.title;
     // Use high res thumbnail if available, else standard
-    const thumb = animal.thumbnail ? animal.thumbnail.source : 'https://placehold.co/400x600/10b981/ffffff?text=No+Image';
+    const thumb = animal.thumbnail ? animal.thumbnail.source : 'https://placehold.co/400x600/000000/ffffff?text=No+Image';
     
     // Store in map
     itemsMap.set(animal.pageid, animal);
@@ -439,7 +430,7 @@
     return `
       <div class="pic-card" onclick='openModalForId(${animal.pageid})'>
         <img src="${escapeAttr(thumb)}" loading="lazy" alt="${escapeAttr(title)}">
-        <div class="score-badge">WIKI</div>
+        <div class="score-badge">INFO</div>
         <div class="title-overlay">${escapeAttr(title)}</div>
       </div>`;
   }
@@ -528,7 +519,6 @@
     // Metadata preparation
     const title = animal.title;
     const desc = animal.extract || 'No description available.';
-    const url = animal.fullurl || '#';
     const lastMod = new Date(animal.touched).toLocaleDateString();
     
     // Image
@@ -541,21 +531,17 @@
     modalTextContent.innerHTML = `
         <div class="modal-title">${title}</div>
         <div class="modal-meta">
-            <span class="modal-tag">Wikipedia Source</span>
+            <span class="modal-tag">Database Record</span>
             <span class="modal-tag">Updated: ${lastMod}</span>
         </div>
         <div class="modal-desc">${desc}</div>
         
         <div class="data-grid">
-            <div class="data-item"><strong>Source</strong><span>English Wikipedia</span></div>
-            <div class="data-item"><strong>Page ID</strong><span>${animal.pageid}</span></div>
-            <div class="data-item"><strong>Language</strong><span>English</span></div>
             <div class="data-item"><strong>Type</strong><span>Article</span></div>
+            <div class="data-item"><strong>Record ID</strong><span>${animal.pageid}</span></div>
+            <div class="data-item"><strong>Language</strong><span>English</span></div>
         </div>
     `;
-    
-    // Set External Link
-    wikiLink.href = url;
     
     modal.classList.add('show');
     modal.setAttribute('aria-hidden','false');
