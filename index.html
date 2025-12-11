@@ -11,17 +11,18 @@
 <link rel="icon" sizes="512x512" href="https://pirateruler.com/favicon-512.png">
 <link rel="apple-touch-icon" href="https://pirateruler.com/apple-touch-icon.png">
 
-<meta name="description" content="Discover detailed information about animals from around the world." />
+<meta name="description" content="Discover wildlife, endangered species, and animal details." />
 <meta property="og:title" content="Animal List by PirateRuler.com" />
-<meta property="og:description" content="Browse hundreds of animals, view habitats, diets, and details." />
-<meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%23000000'/%3E%3Ctext x='50%25' y='50%25' font-family='Inter' font-weight='800' font-size='200' text-anchor='middle' dominant-baseline='middle' fill='white'%3EPR%3C/text%3E%3C/svg%3E" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect rx='14' width='64' height='64' fill='%23000000'/%3E%3Ctext x='50%25' y='50%25' font-family='Inter,Arial,sans-serif' font-weight='800' font-size='26' text-anchor='middle' alignment-baseline='central' fill='white'%3EPR%3C/text%3E%3C/svg%3E">
+<meta property="og:description" content="Browse thousands of animals, view images, habitat and details." />
+<meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%2310b981'/%3E%3Ctext x='50%25' y='50%25' font-family='Inter' font-weight='800' font-size='200' text-anchor='middle' dominant-baseline='middle' fill='white'%3EPR%3C/text%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect rx='14' width='64' height='64' fill='%2310b981'/%3E%3Ctext x='50%25' y='50%25' font-family='Inter,Arial,sans-serif' font-weight='800' font-size='26' text-anchor='middle' alignment-baseline='central' fill='white'%3EPR%3C/text%3E%3C/svg%3E">
 <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkFuaW1hbCBMaXN0IiwKICAic2hvcnRfbmFtZSI6ICJBbmltYWxzIiwKICAic3RhcnRfdXJsIjogIi9pbmRleC5odG1sIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZjBmNGY4IiwKICAidGhlbWVfY29sb3IiOiAiIzAwMDAwMCIKfQo==">
 <style>
   /* ----  your original colour scheme ---- */
   :root{
     --bg:#f0f4f8; --card:#ffffff; --muted:#64748b; --text:#0f172a;
-    --border:#e2e8f0; --accent:#000000; --key-bg:#f1f5f9;
+    --border:#e2e8f0; --accent:#10b981; /* Changed accent to Green for Animals */
+    --key-bg:#f1f5f9;
     --success:#10b981; --warning:#f59e0b; --error:#ef4444;
     --shadow-sm:0 1px 2px 0 rgba(0,0,0,0.05);
     --shadow-md:0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
@@ -31,7 +32,7 @@
   }
   html.dark {
     --bg:#0f172a; --card:#1e293b; --muted:#94a3b8; --text:#f1f5f9;
-    --border:#334155; --accent:#ffffff; --key-bg:#334155;
+    --border:#334155; --accent:#10b981; --key-bg:#334155;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html{scroll-behavior:smooth;}
@@ -65,8 +66,8 @@
   .card h2{margin:0 0 12px 0;font-size:22px;font-weight:800;letter-spacing:-0.5px;display:flex;align-items:center;gap:8px;}
   .hint{color:var(--muted);font-size:14px;margin-bottom:16px;line-height:1.5;}
   input[type="text"],input[type="number"],input[type="date"],input[type="color"],input[type="range"],select,textarea{width:100%;padding:14px;border-radius:var(--radius-md);border:1px solid var(--border);font-size:15px;background:var(--bg);color:var(--text);transition:var(--transition);box-shadow:var(--shadow-sm);font-family:inherit;}
-  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
-  .dark input:focus,.dark select:focus,.dark textarea:focus{box-shadow:0 0 0 3px rgba(96,165,250,0.2);}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(16, 185, 129,0.1);}
+  .dark input:focus,.dark select:focus,.dark textarea:focus{box-shadow:0 0 0 3px rgba(16, 185, 129,0.2);}
   .row{display:flex;gap:12px;flex-wrap:wrap;}
   .row>*{flex:1;min-width:120px;}
   .primary{background:var(--accent);color:var(--bg);padding:10px 16px;border-radius:var(--radius-md);border:1px solid var(--accent);font-weight:700;cursor:pointer;transition:var(--transition);box-shadow:var(--shadow-sm); text-decoration:none;}
@@ -112,7 +113,7 @@
   .toast .icon{font-size:20px;}
     
   /* ----  gallery & modal ---- */
-  #gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:16px;}
+  #gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:16px;}
     
   /* MOBILE GRID OVERRIDE: 2 Columns on small screens */
   @media(max-width:480px){
@@ -131,15 +132,14 @@
   .copy-btn{font-size:12px;padding:6px 10px;margin-left:8px;}
   .brand a{text-decoration:none;}
     
-  .pic-card{background:var(--bg);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:var(--transition);box-shadow:var(--shadow-sm);position:relative; aspect-ratio: 4/3;}
+  .pic-card{background:var(--bg);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:var(--transition);box-shadow:var(--shadow-sm);position:relative; aspect-ratio: 2/3;}
   .pic-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);}
     
-  /* Update: Removed blur filter completely so images are sharp immediately */
   .pic-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s ease;}
-   
-  /* Animal tag badge */
-  .score-badge { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; backdrop-filter: blur(4px); text-transform: capitalize; }
-  .title-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 20px 10px 10px; color: white; font-size: 14px; font-weight: 600; text-align: center; }
+  
+  /* Anime score badge -> now reused for Type/Status */
+  .score-badge { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; backdrop-filter: blur(4px); }
+  .title-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 20px 10px 10px; color: white; font-size: 13px; font-weight: 600; text-align: center; }
 
   .loading-spinner{display:inline-block;width:20px;height:20px;border:3px solid var(--border);border-top:3px solid var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin-left:8px;}
   @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
@@ -148,8 +148,8 @@
   .no-more:hover{background:var(--key-bg);}
     
   #searchBox{width:100%;padding:14px;border-radius:var(--radius-md);border:1px solid var(--border);font-size:15px;background:var(--bg);color:var(--text);transition:var(--transition);box-shadow:var(--shadow-sm);}
-  #searchBox:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
-  .dark #searchBox:focus{box-shadow:0 0 0 3px rgba(96,165,250,0.2);}
+  #searchBox:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(16, 185, 129,0.1);}
+  .dark #searchBox:focus{box-shadow:0 0 0 3px rgba(16, 185, 129,0.2);}
     
   /* ----  modal updated for Screenshot 1 Look ---- */
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:2000;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s ease;}
@@ -188,7 +188,7 @@
       border: none;
   }
   .close-modal-btn:hover { background: var(--error); transform: scale(1.1); }
-   
+  
   @media (min-width: 768px) {
       .close-modal-btn { background: var(--key-bg); color: var(--text); }
   }
@@ -199,18 +199,25 @@
     
   .modal-info-col { padding: 24px; position:relative;}
     
-  .modal-title { font-size: 28px; font-weight: 800; margin-bottom: 8px; line-height: 1.2; margin-top: 20px; text-transform: capitalize; }
+  .modal-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; line-height: 1.2; margin-top: 20px; }
   @media (min-width: 768px) { .modal-title { margin-top: 0; } }
 
   .modal-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; font-size: 13px; color: var(--muted); }
   .modal-tag { background: var(--key-bg); padding: 4px 8px; border-radius: 4px; font-weight: 600; color: var(--text); border:1px solid var(--border);}
-  .modal-sci { color: var(--warning); font-style: italic; font-weight: 600; display:flex; align-items:center; gap:4px; font-size: 15px;}
-   
+  .modal-score { color: var(--accent); font-weight: 800; display:flex; align-items:center; gap:4px; font-size: 16px;}
+  
   .modal-desc { font-size: 15px; color: var(--text); line-height: 1.6; margin-bottom: 20px; white-space: pre-wrap; flex-grow: 1; }
-   
+  
   .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; font-size: 13px; border-top: 1px solid var(--border); padding-top: 16px; }
   .data-item strong { display: block; color: var(--text); margin-bottom: 2px; }
   .data-item span { color: var(--muted); }
+
+  /* New Character Section Styles */
+  .section-header { font-size: 16px; font-weight: 800; margin: 20px 0 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px; color: var(--text); }
+  .char-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 10px; margin-top: 10px; }
+  .char-item { text-align: center; font-size: 11px; color: var(--text); }
+  .char-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 4px; border: 2px solid var(--border); background: var(--key-bg); }
+  .role-tag { font-size: 9px; color: var(--muted); display: block; }
 
   .modal-btn-row { display: flex; gap: 12px; align-items: center; margin-top: 24px; }
     
@@ -251,32 +258,38 @@
   </header>
 
   <section class="hero" aria-labelledby="heroTitle">
-    <h1 id="heroTitle" class="big">Animal Kingdom</h1>
-    <p class="small">Explore detailed information about animals from around the world. Discover habitats, diets, and amazing facts.</p>
+    <h1 id="heroTitle" class="big">Discover Wildlife</h1>
+    <p class="small">Explore the animal kingdom. Detailed information on mammals, birds, reptiles, and aquatic life.</p>
   </section>
 
   <main id="main-content" class="grid">
     <div>
       <section id="gallery-sec" class="card">
         
-        <input id="searchBox" type="text" placeholder="Search for an animal (e.g. Lion, Eagle)..." autocomplete="off" style="margin-bottom:20px;">
+        <input id="searchBox" type="text" placeholder="Search animals (e.g. Tiger, Eagle)..." autocomplete="off" style="margin-bottom:20px;">
         
+        <div class="tabs">
+          <button class="btn primary tab-btn active" data-filter="general">Popular</button>
+          <button class="btn ghost tab-btn" data-filter="endangered">Endangered</button>
+          <button class="btn ghost tab-btn" data-filter="aquatic">Aquatic</button>
+        </div>
+
         <div class="chips" id="chips">
-          <span class="chip active" data-query="all">All Animals</span>
-          <span class="chip" data-query="cat">Cats</span>
-          <span class="chip" data-query="dog">Dogs</span>
-          <span class="chip" data-query="bird">Birds</span>
-          <span class="chip" data-query="bear">Bears</span>
-          <span class="chip" data-query="fish">Fish</span>
+          <span class="chip" data-query="Big Cats">Big Cats</span>
+          <span class="chip" data-query="Birds of Prey">Birds</span>
+          <span class="chip" data-query="Reptiles">Reptiles</span>
+          <span class="chip" data-query="Wild Dogs">Canines</span>
+          <span class="chip" data-query="Primates">Primates</span>
+          <span class="chip" data-query="Insects">Insects</span>
         </div>
 
         <div id="gallery" aria-live="polite"></div>
         
-        <div id="loader" class="no-more" style="display:none;">
-           Loading... <span class="loading-spinner"></span>
+        <div id="loader" class="no-more" onclick="loadMore()">
+            Load More <span class="loading-spinner" style="display:none;"></span>
         </div>
         
-        <div id="endMsg" class="no-more" style="display:none;">End of results.</div>
+        <div id="endMsg" class="no-more" style="display:none;">🎉 No more results found.</div>
       </section>
     </div>
 
@@ -285,8 +298,8 @@
         <div class="panel-title">Information</div>
         
         <div class="useful-tips" style="margin-top:0; border:none; background:transparent; padding:0;">
-          <p class="muted" style="margin-top:0;"><strong>Description:</strong><br>Access a comprehensive database of animals. View scientific names, locations, and unique characteristics.</p>
-          <p class="muted"><strong>How to Use:</strong><br>Click on any animal photo to view full details.</p>
+          <p class="muted" style="margin-top:0;"><strong>Description:</strong><br>Access a comprehensive database of animals. View high-quality images and learn about their habitat and behavior.</p>
+          <p class="muted"><strong>How to Use:</strong><br>Click on any animal card to view detailed Wiki info.</p>
         </div>
 
         <div class="spacer"></div>
@@ -340,6 +353,7 @@
             </div>
         <div class="modal-btn-row">
              <button class="btn ghost" onclick="closeModal()" style="flex:1;">Close</button>
+             <a id="wikiLink" href="#" target="_blank" class="btn primary" style="flex:1; text-align:center;">Read on Wiki</a>
         </div>
     </div>
   </div>
@@ -384,59 +398,65 @@
     showToast._t = setTimeout(() => toast.classList.remove('show'), 3500);
   }
 
-  /* ----------  Animal API Logic  ---------- */
+  /* ----------  MEDIAWIKI (Wikipedia) API Logic  ---------- */
   
-  // Using FreeTestAPI for Animals (No key required, returns clean JSON)
-  const BASE_URL = 'https://freetestapi.com/api/v1/animals';
+  // Base URL for English Wikipedia API with CORS handling
+  const WIKI_API = 'https://en.wikipedia.org/w/api.php';
 
   const searchBox       = document.getElementById('searchBox');
   const gallery         = document.getElementById('gallery');
   const loader          = document.getElementById('loader');
+  const loaderSpinner = loader.querySelector('.loading-spinner');
   const endMsg          = document.getElementById('endMsg');
   const modal           = document.getElementById('modal');
    
   // Modal Elements
   const modalMedia    = document.getElementById('modalMedia');
   const modalTextContent = document.getElementById('modalTextContent');
+  const wikiLink      = document.getElementById('wikiLink');
 
   // state
-  let currentQuery = ''; 
+  let currentQuery = 'List of animals'; // Default initial search
+  let offset = 0;
   let loading = false;
+  let endReached = false;
+
+  // helper: escape attr
+  function escapeAttr(s){ return String(s||'').replace(/'/g,"%27").replace(/"/g,'&quot;'); }
   
-  // store loaded items keyed by ID -> item data
+  // store loaded items keyed by pageID -> item data
   const itemsMap = new Map();
 
   // build animal card
   function buildCard(animal){
-    // Use a placeholder if image is missing/broken
-    const thumb = animal.image || 'https://placehold.co/400x300?text=No+Image';
-    const title = animal.name;
-    const origin = animal.place_of_found || 'Unknown';
+    const title = animal.title;
+    // Use high res thumbnail if available, else standard
+    const thumb = animal.thumbnail ? animal.thumbnail.source : 'https://placehold.co/400x600/10b981/ffffff?text=No+Image';
     
-    // Store in map (use unique ID)
-    itemsMap.set(animal.id, animal);
+    // Store in map
+    itemsMap.set(animal.pageid, animal);
 
     return `
-      <div class="pic-card" onclick='openModalForId(${animal.id})'>
-        <img src="${thumb}" loading="lazy" alt="${title}">
-        <div class="score-badge">${origin}</div>
-        <div class="title-overlay">${title}</div>
+      <div class="pic-card" onclick='openModalForId(${animal.pageid})'>
+        <img src="${escapeAttr(thumb)}" loading="lazy" alt="${escapeAttr(title)}">
+        <div class="score-badge">WIKI</div>
+        <div class="title-overlay">${escapeAttr(title)}</div>
       </div>`;
   }
 
-  // Fetch Logic
+  // Fetch Logic using MediaWiki API
   async function fetchAnimals(){
+    if(loading || endReached) return;
     setLoading(true);
-    gallery.innerHTML = ''; // Clear current gallery for new search
-    itemsMap.clear();
-
+    
     try {
-      let url = BASE_URL;
+      // We append "animal" to the search to ensure we get animals and not random things
+      // We use 'generator=search' to get the pages, and 'prop=pageimages|extracts' to get the content
+      // 'pithumbsize=800' ensures we get High Quality images for the modal/card
       
-      // If we have a query, use search
-      if(currentQuery && currentQuery !== 'all') {
-         url = `${BASE_URL}?search=${encodeURIComponent(currentQuery)}`;
-      }
+      const safeQuery = encodeURIComponent(currentQuery);
+      
+      const url = `${WIKI_API}?origin=*&action=query&format=json&generator=search&gsrnamespace=0&gsrlimit=24&gsrsearch=${safeQuery}&gsroffset=${offset}&prop=pageimages|extracts|info&pithumbsize=800&inprop=url&exintro&explaintext&exsentences=5`;
 
       const res = await fetch(url);
       
@@ -444,21 +464,38 @@
       
       const data = await res.json();
       
-      // The API returns an array directly
-      const animals = Array.isArray(data) ? data : [];
-
-      if(animals.length === 0) {
-        endMsg.style.display = 'block';
-        endMsg.textContent = 'No animals found.';
-      } else {
-        const html = animals.map(buildCard).join('');
-        gallery.insertAdjacentHTML('beforeend', html);
-        endMsg.style.display = 'none';
+      // Wikipedia returns pages as an object keyed by ID, we need an array
+      if(!data.query || !data.query.pages) {
+         endReached = true;
+         endMsg.style.display = 'block';
+         loader.style.display = 'none';
+         setLoading(false);
+         return;
       }
+
+      const pagesObj = data.query.pages;
+      let animalsList = Object.values(pagesObj);
+
+      // Simple client-side filter to remove things that don't look like good results (no images)
+      // This keeps the quality high
+      animalsList = animalsList.filter(a => a.thumbnail && a.extract);
+      
+      if(animalsList.length === 0) {
+        // If we filtered everything out, try next page immediately
+        offset += 24;
+        setLoading(false);
+        fetchAnimals();
+        return;
+      }
+
+      const html = animalsList.map(buildCard).join('');
+      gallery.insertAdjacentHTML('beforeend', html);
+      
+      offset += 24; // increase offset for next batch
       
     } catch(err){
       console.error(err);
-      showToast('Failed to load animals', '❌');
+      showToast('Network error or API issues', '❌');
     } finally {
       setLoading(false);
     }
@@ -467,10 +504,16 @@
   function setLoading(bool){
       loading = bool;
       if(bool) {
-          loader.style.display = 'block';
+          loaderSpinner.style.display = 'inline-block';
+          loader.style.cursor = 'wait';
       } else {
-          loader.style.display = 'none';
+          loaderSpinner.style.display = 'none';
+          loader.style.cursor = 'pointer';
       }
+  }
+
+  async function loadMore(){
+    await fetchAnimals();
   }
 
   // Modal behavior
@@ -483,35 +526,36 @@
     modalTextContent.innerHTML = '';
 
     // Metadata preparation
-    const title = animal.name;
-    const sciName = "Scientific name not available"; // API restriction
-    const diet = animal.diet || "Unknown";
-    const family = animal.family || "Unknown";
-    const origin = animal.place_of_found || "Unknown";
-    const description = animal.description || "No description available.";
+    const title = animal.title;
+    const desc = animal.extract || 'No description available.';
+    const url = animal.fullurl || '#';
+    const lastMod = new Date(animal.touched).toLocaleDateString();
     
     // Image
     const img = document.createElement('img');
-    img.src = animal.image || 'https://placehold.co/600x400';
+    // Use the fetched high-res image
+    img.src = animal.thumbnail ? animal.thumbnail.source : '';
     modalMedia.appendChild(img);
 
-    // Initial Text Content (Basic Data)
+    // Initial Text Content
     modalTextContent.innerHTML = `
         <div class="modal-title">${title}</div>
         <div class="modal-meta">
-            <span class="modal-tag">${family}</span>
-            <span class="modal-tag">${diet}</span>
+            <span class="modal-tag">Wikipedia Source</span>
+            <span class="modal-tag">Updated: ${lastMod}</span>
         </div>
+        <div class="modal-desc">${desc}</div>
         
         <div class="data-grid">
-            <div class="data-item"><strong>Origin</strong><span>${origin}</span></div>
-            <div class="data-item"><strong>Family</strong><span>${family}</span></div>
-            <div class="data-item"><strong>Diet</strong><span>${diet}</span></div>
-            <div class="data-item"><strong>ID</strong><span>#${animal.id}</span></div>
+            <div class="data-item"><strong>Source</strong><span>English Wikipedia</span></div>
+            <div class="data-item"><strong>Page ID</strong><span>${animal.pageid}</span></div>
+            <div class="data-item"><strong>Language</strong><span>English</span></div>
+            <div class="data-item"><strong>Type</strong><span>Article</span></div>
         </div>
-        
-        <div class="modal-desc">${description}</div>
     `;
+    
+    // Set External Link
+    wikiLink.href = url;
     
     modal.classList.add('show');
     modal.setAttribute('aria-hidden','false');
@@ -524,21 +568,38 @@
   modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-  // Chips logic
+  // Tabs logic (Presets)
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      // UI Update
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('primary', 'active'); b.classList.add('ghost');
+      });
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      
+      e.target.classList.remove('ghost'); e.target.classList.add('primary', 'active');
+      
+      // State Update
+      const filter = e.target.dataset.filter;
+      if(filter === 'general') currentQuery = 'List of animals';
+      if(filter === 'endangered') currentQuery = 'Endangered species list';
+      if(filter === 'aquatic') currentQuery = 'Marine biology animals';
+      
+      resetGallery();
+    });
+  });
+
+  // Chips logic (Specific Searches)
   document.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', ()=> {
         document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('primary', 'active'); b.classList.add('ghost'); });
+        
         chip.classList.add('active');
         
-        currentQuery = chip.dataset.query;
-        // Update search box visual only
-        if(currentQuery !== 'all') {
-            searchBox.value = currentQuery;
-        } else {
-            searchBox.value = '';
-        }
-        
-        fetchAnimals();
+        // Appending "animal" to help filter wiki results
+        currentQuery = chip.dataset.query + " animal";
+        resetGallery();
     });
   });
 
@@ -548,17 +609,37 @@
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(()=>{
       const val = searchBox.value.trim();
-      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-      
-      if(val.length > 0) {
+      if(val.length > 2) {
+          // deactivate others
+          document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+          document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('primary', 'active'); b.classList.add('ghost'); });
+          
           currentQuery = val;
-      } else {
-          currentQuery = 'all';
-          document.querySelector('.chip[data-query="all"]').classList.add('active');
+          resetGallery();
+      } else if (val.length === 0) {
+           // reset to top
+           document.querySelector('.tab-btn[data-filter="general"]').click();
       }
-      fetchAnimals();
     }, 600);
   });
+
+  function resetGallery(){
+    gallery.innerHTML = '';
+    itemsMap.clear();
+    offset = 0;
+    endReached = false;
+    loader.style.display = 'block';
+    endMsg.style.display = 'none';
+    fetchAnimals();
+  }
+
+  // Infinite scroll
+  const io = new IntersectionObserver((entries)=>{
+    if (entries[0].isIntersecting && !loading) {
+        loadMore();
+    }
+  }, { rootMargin: '400px' });
+  io.observe(loader);
 
   // Init
   fetchAnimals(); 
