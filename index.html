@@ -164,8 +164,12 @@
     width:100%; max-width:1000px; max-height:90vh;
     background:var(--card); border-radius:var(--radius-xl);
     border:1px solid var(--border); box-shadow:var(--shadow-lg);
-    display:flex; flex-direction:column; overflow:hidden;
+    display:flex; flex-direction:column; overflow:hidden; position:relative;
   }
+    
+  /* NEW: Close button at top right */
+  .modal-close-btn{position:absolute; top:16px; right:16px; z-index:2001; background:var(--accent); color:var(--bg); border:none; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:20px; box-shadow:var(--shadow-md);}
+  .modal-close-btn:hover{transform:scale(1.1);}
     
   @media (min-width: 768px) {
     .modal-content { flex-direction: row; height: 600px; }
@@ -182,7 +186,7 @@
   .modal-title { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
   .modal-developer { font-size: 18px; color: var(--muted); margin-bottom: 16px; }
   .modal-rating { font-size: 16px; color: var(--warning); margin-bottom: 16px; }
-  .modal-desc { font-size: 16px; color: var(--text); line-height: 1.6; margin-bottom: 20px; }
+  .modal-desc { font-size: 16px; color: var(--text); line-height: 1.6; margin-bottom: 20px; max-height: 120px; overflow:hidden; }
   .modal-size { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
   .modal-version { font-size: 14px; color: var(--muted); margin-bottom: 30px; }
   .modal-btn-row { display: flex; gap: 12px; align-items: center; margin-top: auto; }
@@ -311,6 +315,9 @@
 
 <div id="modal" class="modal" aria-hidden="true">
   <div class="modal-content" id="modalContent">
+    <!-- NEW: Close button at top right -->
+    <button class="modal-close-btn" onclick="closeModal()" aria-label="Close modal">✕</button>
+    
     <div class="modal-media-col" id="modalMedia">
       </div>
     <div class="modal-info-col">
@@ -543,19 +550,19 @@
     // 2. Populate Media (Left Side)
     modalMedia.innerHTML = `<img src="${escapeAttr(item.icon)}" alt="${escapeAttr(item.name)}">`;
 
-    // 3. Populate Text (Right Side)
+    // 3. Populate Text (Right Side) - TRUNCATED DESCRIPTION
     const ratingStars = '★'.repeat(Math.round(item.rating)) + '☆'.repeat(5 - Math.round(item.rating));
+    const truncatedDesc = item.description.length > 150 ? item.description.substring(0, 150) + '...' : item.description;
     modalTextContent.innerHTML = `
         <div class="modal-title">${escapeAttr(item.name)}</div>
         <div class="modal-developer">by ${escapeAttr(item.developer)}</div>
         <div class="modal-rating">${ratingStars} (${item.ratingCount} reviews)</div>
-        <div class="modal-desc">${escapeAttr(item.description)}</div>
+        <div class="modal-desc">${escapeAttr(truncatedDesc)}</div>
         <div class="modal-size">Size: ${item.size}</div>
         <div class="modal-version">Version: ${item.version}</div>
     `;
 
     // 4. Set download link (simulate direct download)
-    // In a real implementation, you'd proxy the download or provide APK files
     modalDownload.href = '#';
     modalDownload.onclick = (e) => {
       e.preventDefault();
@@ -567,6 +574,9 @@
     };
     modalDownload.setAttribute('download', `${item.name.replace(/[^a-zA-Z0-9]/g, '_')}.apk`);
     
+    // FIX: Prevent background scrolling on mobile
+    document.body.style.overflow = 'hidden';
+    
     modal.classList.add('show');
     modal.setAttribute('aria-hidden','false');
   }
@@ -574,6 +584,8 @@
   function closeModal(){
     modal.classList.remove('show');
     modal.setAttribute('aria-hidden','true');
+    // FIX: Restore background scrolling
+    document.body.style.overflow = '';
   }
   modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
